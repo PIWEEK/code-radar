@@ -29,11 +29,11 @@ type RepoInfo struct {
 
 type ResponseFile struct {
 	Name string `json:"name"`
-	Extension string `json:"extension"`
+	Directory string `json:"directory,omitempty"`
+	Extension string `json:"extension,omitempty"`
 	Lines int `json:"lines"`
 	Rating float32 `json:"rating"`
 	IsDirectory bool `json:"isDirectory"`
-	// Path string `json:path`
 }
 
 type Response struct {
@@ -142,10 +142,8 @@ func ProcessCommit(t *memdb.Txn, commit *object.Commit) error {
 			}
 		}
 		
-
 		return err
 	})
-
 
 	return err
 }
@@ -184,14 +182,10 @@ func ProcessRepository(url string){
 	log.Println("[END] Processing repository")
 }
 
-func ListFiles(path string) [](*FileDB) {
+func ListFiles() [](*FileDB) {
 	t := db.Txn(false)
 
-	if path == "" {
-		path = "."
-	}
-	
-	it, err := t.Get("files", "parent", path)
+	it, err := t.Get("files", "parent")
 	CheckError(err)
 
 	var result [](*FileDB)
@@ -206,15 +200,27 @@ func ListFiles(path string) [](*FileDB) {
 func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 	var responseFiles []ResponseFile
 
-	path := r.URL.Query().Get("path")
-	
-	for _, file := range ListFiles(path) {
+	for _, file := range ListFiles() {
+		isDir := file.Dir
+
+		var directory string
+
+		if file.Parent != "." {
+			directory = file.Parent
+		}
+		
+		var extension string
+		if !isDir {
+			extension = filepath.Ext(file.Name)
+		}
+		
 		responseFiles = append(responseFiles, ResponseFile {
-			Name: filepath.Base(file.Name),
-			Extension: filepath.Ext(file.Name),
+			Name: file.Name,
+			Directory: directory,
+			Extension: extension,
 			Lines: rand.Int() % 10000,
 			Rating: rand.Float32(),
-			IsDirectory: file.Dir,
+			IsDirectory: isDir,
 		})
 	}
 
