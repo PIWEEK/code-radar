@@ -586,7 +586,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file, 52, 4, 1991);
+    			add_location(p, file, 52, 4, 1922);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -641,9 +641,9 @@ var app = (function () {
     			}
 
     			attr_dev(h1, "class", "uk-heading-medium uk-heading-divider");
-    			add_location(h1, file, 43, 4, 1682);
+    			add_location(h1, file, 43, 4, 1629);
     			attr_dev(ul, "class", "uk-list uk-list-striped");
-    			add_location(ul, file, 44, 4, 1779);
+    			add_location(ul, file, 44, 4, 1726);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -704,7 +704,7 @@ var app = (function () {
     // (46:6) {#each projectInfo.files as file, i}
     function create_each_block(ctx) {
     	let li;
-    	let t0_value = buildPath(/*file*/ ctx[3].path, /*file*/ ctx[3].name, /*file*/ ctx[3].extension) + "";
+    	let t0_value = buildPath(/*file*/ ctx[3].path, /*file*/ ctx[3].name) + "";
     	let t0;
     	let t1;
 
@@ -713,7 +713,7 @@ var app = (function () {
     			li = element("li");
     			t0 = text(t0_value);
     			t1 = space();
-    			add_location(li, file, 46, 8, 1867);
+    			add_location(li, file, 46, 8, 1814);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -745,7 +745,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file, 41, 4, 1638);
+    			add_location(p, file, 41, 4, 1585);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -806,7 +806,7 @@ var app = (function () {
     			if (script1.src !== (script1_src_value = "https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit-icons.min.js")) attr_dev(script1, "src", script1_src_value);
     			add_location(script1, file, 4, 2, 223);
     			attr_dev(main, "class", "svelte-os8pjd");
-    			add_location(main, file, 39, 0, 1599);
+    			add_location(main, file, 39, 0, 1546);
     		},
     		l: function claim(nodes) {
     			throw new Error_1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -850,14 +850,14 @@ var app = (function () {
     	return block;
     }
 
-    function buildPath(path, name, extension) {
+    function buildPath(path, name) {
     	let fullPath = "";
 
-    	if (path.length >= 0) {
+    	if (path.length >= 2) {
     		fullPath = path.join(`/`);
     	}
 
-    	return `${fullPath}${name}.${extension}`;
+    	return `${fullPath}${name}`;
     }
 
     function instance($$self, $$props, $$invalidate) {
@@ -903,7 +903,7 @@ var app = (function () {
     	// export let name: string;
     	function getProjectData() {
     		return __awaiter(this, void 0, void 0, function* () {
-    			const res = yield fetch(`https://mocki.io/v1/52e7b578-b952-47ca-8c58-618aee7bf41b`);
+    			const res = yield fetch(`http://localhost:8000/files`);
     			const text = yield res.json();
 
     			if (res.ok) {

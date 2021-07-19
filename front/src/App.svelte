@@ -9,7 +9,7 @@
 <script lang="ts">
 	// export let name: string;
 	async function getProjectData() {
-		const res = await fetch(`https://mocki.io/v1/52e7b578-b952-47ca-8c58-618aee7bf41b`);
+		const res = await fetch(`http://localhost:8000/files`);
 		const text = await res.json();
 
 		if (res.ok) {
@@ -19,12 +19,12 @@
 		}
 	}
 
-  function buildPath(path, name, extension) {
+  function buildPath(path, name) {
     let fullPath = "";
-    if(path.length >= 0) {
+    if(path.length >= 2) {
       fullPath = path.join(`/`);
     }
-    return `${fullPath}${name}.${extension}`;
+    return `${fullPath}${name}`;
   }
 </script>
 
@@ -36,7 +36,7 @@
     <ul class="uk-list uk-list-striped">
       {#each projectInfo.files as file, i}
         <li>
-          {buildPath(file.path, file.name, file.extension)}
+          {buildPath(file.path, file.name)}
         </li>
       {/each}
     </ul>
