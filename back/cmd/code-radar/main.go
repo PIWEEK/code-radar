@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	// "strings"
+	"strings"
 
 	"math/rand"
 	"net/http"
@@ -30,8 +30,9 @@ type RepoInfo struct {
 type ResponseFile struct {
 	Name string `json:"name"`
 	Extension string `json:"extension"`
-	Lines int `json:lines`
-	Rating float32 `json:rating`
+	Lines int `json:"lines"`
+	Rating float32 `json:"rating"`
+	IsDirectory bool `json:"isDirectory"`
 	// Path string `json:path`
 }
 
@@ -43,7 +44,9 @@ type Response struct {
 
 type FileDB struct {
 	Id string
+	Dir bool
 	Path string
+	Parent string
 	Name string
 }
 
@@ -76,6 +79,16 @@ func CreateSchema() *memdb.DBSchema {
 						Unique:  false,
 						Indexer: &memdb.StringFieldIndex{Field: "Path"},
 					},
+					"parent": &memdb.IndexSchema{
+						Name:    "parent",
+						Unique:  false,
+						Indexer: &memdb.StringFieldIndex{Field: "Parent"},
+					},
+					"name": &memdb.IndexSchema{
+						Name:    "name",
+						Unique:  false,
+						Indexer: &memdb.StringFieldIndex{Field: "Name"},
+					},
 				},
 			},
 		},
@@ -83,37 +96,61 @@ func CreateSchema() *memdb.DBSchema {
 	return schema
 }
 
-func ProcessCommit(commit *object.Commit) error {
-	files, err := commit.Files()
+func ProcessFile(t *memdb.Txn, path string, dir bool) error {
+	raw, err := t.First("files", "path", path)
 
-	t := db.Txn(true)
+	parent := filepath.Dir(path)
 
-	err = files.ForEach(func(file *object.File) error {
-		path := file.Name
-		raw, err := t.First("files", "path", path)
-
-		if err == nil && raw == nil {
-			filedb := &FileDB{
-				Id: uuid.NewString(),
-				Path: path,
-			}
-			err = t.Insert("files", filedb)
+	if err == nil && raw == nil {
+		filedb := &FileDB{
+			Id: uuid.NewString(),
+			Dir: dir,
+			Path: path,
+			Parent: parent,
+			Name: filepath.Base(path),
 		}
-
-		return err
-	})
-
-	if err == nil {
-		t.Commit()
-	} else {
-		t.Abort()
-		return err
+		err = t.Insert("files", filedb)
 	}
 
 	return err
 }
 
-func ProcessRepository(url string) {
+func ProcessCommit(t *memdb.Txn, commit *object.Commit) error {
+	files, err := commit.Files()
+
+	err = files.ForEach(func(file *object.File) error {
+		path := file.Name
+
+		err = ProcessFile(t, path, false)
+
+		if (err != nil) {
+			return err
+		}
+
+		dirs := strings.Split(filepath.Dir(path), "/")
+		var currentDir string
+
+		for _, dir := range dirs {
+			if currentDir == "" {
+				currentDir = dir
+			} else {
+				currentDir = currentDir + "/" + dir
+			}
+
+			if currentDir != "." {
+				err = ProcessFile(t, currentDir, true)
+			}
+		}
+		
+
+		return err
+	})
+
+
+	return err
+}
+
+func ProcessRepository(url string){
 	repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions {
 		URL: url,
 		Progress: os.Stdout,
@@ -131,20 +168,36 @@ func ProcessRepository(url string) {
 	CheckError(err)
 
 	log.Println("[START] Processing repository")
-	err = commits.ForEach(ProcessCommit)
+	t := db.Txn(true)
+
+	err = commits.ForEach(func (commit *object.Commit) error {
+		return ProcessCommit(t, commit)
+	})
+
+	if err == nil {
+		t.Commit()
+	} else {
+		t.Abort()
+	}
+	
 	CheckError(err)
 	log.Println("[END] Processing repository")
 }
 
-func ListFiles(path string) []string {
+func ListFiles(path string) [](*FileDB) {
 	t := db.Txn(false)
-	it, err := t.Get("files", "path_prefix", path)
+
+	if path == "" {
+		path = "."
+	}
+	
+	it, err := t.Get("files", "parent", path)
 	CheckError(err)
 
-	var result []string
+	var result [](*FileDB)
 	for obj := it.Next(); obj != nil; obj = it.Next() {
 		p := obj.(*FileDB)
-		result = append(result, p.Path)
+		result = append(result, p)
 	}
 
 	return result
@@ -156,17 +209,13 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Query().Get("path")
 	
 	for _, file := range ListFiles(path) {
-		// log.Println("??", filepath.Dir(file), path)
-		if path == "" && filepath.Dir(file) == "." ||
-			 path != "" && filepath.Dir(file) == path {
-			responseFiles = append(responseFiles, ResponseFile {
-				Name: filepath.Base(file),
-				Extension: filepath.Ext(file),
-				Lines: rand.Int() % 10000,
-				Rating: rand.Float32(),
-				//Path: file,
-			})
-		}
+		responseFiles = append(responseFiles, ResponseFile {
+			Name: filepath.Base(file.Name),
+			Extension: filepath.Ext(file.Name),
+			Lines: rand.Int() % 10000,
+			Rating: rand.Float32(),
+			IsDirectory: file.Dir,
+		})
 	}
 
 	result := &Response {
