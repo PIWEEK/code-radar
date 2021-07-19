@@ -157,6 +157,7 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &Response {
+		Name: info.Name,
 		Url: info.Url,
 		Files: responseFiles,
 	}
@@ -177,14 +178,16 @@ func Serve() error {
 }
 
 func main() {
-	if (len (os.Args) != 2) {
-		log.Fatal("coderadar [url]")
+	if (len (os.Args) != 3) {
+		log.Fatal("coderadar [name] [url]")
 	}
-	
-	url := os.Args[1]
+
+	name := os.Args[1]
+	url := os.Args[2]
 	log.Println("> Repository:", url)
 
 	info = &RepoInfo {
+		Name: name,
 		Url: url,
 	}
 

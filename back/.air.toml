@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 [build]
   cmd = "go build -o ./tmp/main cmd/code-radar/main.go"
   bin = "tmp/main"
-  full_bin = "tmp/main https://github.com/PIWEEK/code-radar.git"
+  full_bin = "tmp/main \"Code Radar\" https://github.com/PIWEEK/code-radar.git"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor"]
   exclude_file = []
