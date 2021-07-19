@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 	"os"
-	"strings"
+	// "strings"
 
+	"math/rand"
 	"net/http"
 	"encoding/json"
 	"path/filepath"
@@ -29,7 +30,9 @@ type RepoInfo struct {
 type ResponseFile struct {
 	Name string `json:"name"`
 	Extension string `json:"extension"`
-	Path []string `json:"path"`
+	Lines int `json:lines`
+	Rating float32 `json:rating`
+	// Path string `json:path`
 }
 
 type Response struct {
@@ -41,6 +44,7 @@ type Response struct {
 type FileDB struct {
 	Id string
 	Path string
+	Name string
 }
 
 func CheckError(err error) {
@@ -80,19 +84,18 @@ func CreateSchema() *memdb.DBSchema {
 }
 
 func ProcessCommit(commit *object.Commit) error {
-	log.Println("Processing commit:", commit.Hash)
-
 	files, err := commit.Files()
 
 	t := db.Txn(true)
 
 	err = files.ForEach(func(file *object.File) error {
-		raw, err := t.First("files", "path", file.Name)
+		path := file.Name
+		raw, err := t.First("files", "path", path)
 
 		if err == nil && raw == nil {
 			filedb := &FileDB{
 				Id: uuid.NewString(),
-				Path: file.Name,
+				Path: path,
 			}
 			err = t.Insert("files", filedb)
 		}
@@ -127,13 +130,15 @@ func ProcessRepository(url string) {
 	commits, err := repo.Log(&options)
 	CheckError(err)
 
+	log.Println("[START] Processing repository")
 	err = commits.ForEach(ProcessCommit)
 	CheckError(err)
+	log.Println("[END] Processing repository")
 }
 
-func ListFiles() []string {
+func ListFiles(path string) []string {
 	t := db.Txn(false)
-	it, err := t.Get("files", "path")
+	it, err := t.Get("files", "path_prefix", path)
 	CheckError(err)
 
 	var result []string
@@ -147,13 +152,21 @@ func ListFiles() []string {
 
 func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 	var responseFiles []ResponseFile
+
+	path := r.URL.Query().Get("path")
 	
-	for _, file := range ListFiles() {
-		responseFiles = append(responseFiles, ResponseFile {
-			Name: filepath.Base(file),
-			Extension: filepath.Ext(file),
-			Path: strings.Split(filepath.Dir(file), "/"),
-		})
+	for _, file := range ListFiles(path) {
+		// log.Println("??", filepath.Dir(file), path)
+		if path == "" && filepath.Dir(file) == "." ||
+			 path != "" && filepath.Dir(file) == path {
+			responseFiles = append(responseFiles, ResponseFile {
+				Name: filepath.Base(file),
+				Extension: filepath.Ext(file),
+				Lines: rand.Int() % 10000,
+				Rating: rand.Float32(),
+				//Path: file,
+			})
+		}
 	}
 
 	result := &Response {
