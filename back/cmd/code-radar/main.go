@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-memdb"
 	"github.com/go-git/go-git/v5"
@@ -169,8 +170,10 @@ func Serve() error {
 
 	router.HandleFunc("/files", RetrieveFiles)
 
+	handler := cors.Default().Handler(router)
+
 	log.Println("Listening http://localhost:8000/files")
-	return http.ListenAndServe(":8000", router)
+	return http.ListenAndServe(":8000", handler)
 }
 
 func main() {

@@ -16,6 +16,7 @@ require (
 	github.com/kevinburke/ssh_config v1.1.0 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/pelletier/go-toml v1.9.3 // indirect
+	github.com/rs/cors v1.8.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
