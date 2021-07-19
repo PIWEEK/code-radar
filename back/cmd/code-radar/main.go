@@ -27,15 +27,15 @@ type RepoInfo struct {
 }
 
 type ResponseFile struct {
-	Name string `json:name`
-	Extension string `json:extension`
-	Path []string `json:path`
+	Name string `json:"name"`
+	Extension string `json:"extension"`
+	Path []string `json:"path"`
 }
 
 type Response struct {
-	Name string `json:name`
-	Url string `json:url`
-	Files []ResponseFile `json:files`
+	Name string `json:"name"`
+	Url string `json:"url"`
+	Files []ResponseFile `json:"files"`
 }
 
 type FileDB struct {
