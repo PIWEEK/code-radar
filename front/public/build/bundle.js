@@ -575,7 +575,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (52:2) {:catch error}
+    // (55:2) {:catch error}
     function create_catch_block(ctx) {
     	let p;
     	let t_value = /*error*/ ctx[6].message + "";
@@ -586,7 +586,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file, 52, 4, 1922);
+    			add_location(p, file, 55, 4, 1965);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -602,7 +602,7 @@ var app = (function () {
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(52:2) {:catch error}",
+    		source: "(55:2) {:catch error}",
     		ctx
     	});
 
@@ -612,12 +612,10 @@ var app = (function () {
     // (43:2) {:then projectInfo}
     function create_then_block(ctx) {
     	let h1;
+    	let a;
     	let t0_value = /*projectInfo*/ ctx[2].name + "";
     	let t0;
     	let t1;
-    	let t2_value = /*projectInfo*/ ctx[2].url + "";
-    	let t2;
-    	let t3;
     	let ul;
     	let each_value = /*projectInfo*/ ctx[2].files;
     	validate_each_argument(each_value);
@@ -630,27 +628,28 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			h1 = element("h1");
+    			a = element("a");
     			t0 = text(t0_value);
-    			t1 = text(" - ");
-    			t2 = text(t2_value);
-    			t3 = space();
+    			t1 = space();
     			ul = element("ul");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
+    			attr_dev(a, "href", /*projectInfo*/ ctx[2].url);
+    			attr_dev(a, "target", "_blank");
+    			add_location(a, file, 44, 4, 1683);
     			attr_dev(h1, "class", "uk-heading-medium uk-heading-divider");
     			add_location(h1, file, 43, 4, 1629);
     			attr_dev(ul, "class", "uk-list uk-list-striped");
-    			add_location(ul, file, 44, 4, 1726);
+    			add_location(ul, file, 47, 4, 1769);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
-    			append_dev(h1, t0);
-    			append_dev(h1, t1);
-    			append_dev(h1, t2);
-    			insert_dev(target, t3, anchor);
+    			append_dev(h1, a);
+    			append_dev(a, t0);
+    			insert_dev(target, t1, anchor);
     			insert_dev(target, ul, anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -684,7 +683,7 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h1);
-    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(ul);
     			destroy_each(each_blocks, detaching);
     		}
@@ -701,7 +700,7 @@ var app = (function () {
     	return block;
     }
 
-    // (46:6) {#each projectInfo.files as file, i}
+    // (49:6) {#each projectInfo.files as file, i}
     function create_each_block(ctx) {
     	let li;
     	let t0_value = buildPath(/*file*/ ctx[3].path, /*file*/ ctx[3].name) + "";
@@ -713,7 +712,7 @@ var app = (function () {
     			li = element("li");
     			t0 = text(t0_value);
     			t1 = space();
-    			add_location(li, file, 46, 8, 1814);
+    			add_location(li, file, 49, 8, 1857);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -730,7 +729,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(46:6) {#each projectInfo.files as file, i}",
+    		source: "(49:6) {#each projectInfo.files as file, i}",
     		ctx
     	});
 

@@ -32,7 +32,10 @@
   {#await getProjectData()}
     <p>...waiting</p>
   {:then projectInfo}
-    <h1 class="uk-heading-medium uk-heading-divider">{projectInfo.name} - {projectInfo.url}</h1>
+    <h1 class="uk-heading-medium uk-heading-divider">
+    <a href="{projectInfo.url}" target="_blank">{projectInfo.name}
+    </a>
+    </h1>
     <ul class="uk-list uk-list-striped">
       {#each projectInfo.files as file, i}
         <li>
