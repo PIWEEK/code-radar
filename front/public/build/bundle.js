@@ -7183,15 +7183,15 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[12] = list[i];
-    	child_ctx[14] = i;
+    	child_ctx[13] = list[i];
+    	child_ctx[15] = i;
     	return child_ctx;
     }
 
-    // (135:2) {:catch error}
+    // (168:2) {:catch error}
     function create_catch_block(ctx) {
     	let p;
-    	let t_value = /*error*/ ctx[16].message + "";
+    	let t_value = /*error*/ ctx[17].message + "";
     	let t;
 
     	const block = {
@@ -7199,7 +7199,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file, 135, 4, 4417);
+    			add_location(p, file, 168, 4, 5550);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -7217,18 +7217,18 @@ var app = (function () {
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(135:2) {:catch error}",
+    		source: "(168:2) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (98:2) {:then projectInfo}
+    // (131:2) {:then projectInfo}
     function create_then_block(ctx) {
     	let h1;
     	let a;
-    	let t0_value = /*projectInfo*/ ctx[11].name + "";
+    	let t0_value = /*projectInfo*/ ctx[12].name + "";
     	let t0;
     	let t1;
     	let button;
@@ -7256,7 +7256,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	let each_value = /*projectInfo*/ ctx[11].files;
+    	let each_value = /*projectInfo*/ ctx[12].files;
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -7282,18 +7282,18 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(a, "href", /*projectInfo*/ ctx[11].url);
+    			attr_dev(a, "href", /*projectInfo*/ ctx[12].url);
     			attr_dev(a, "target", "_blank");
-    			add_location(a, file, 99, 4, 3363);
+    			add_location(a, file, 132, 4, 4496);
     			attr_dev(h1, "class", "uk-heading-medium uk-heading-divider");
-    			add_location(h1, file, 98, 4, 3309);
+    			add_location(h1, file, 131, 4, 4442);
     			attr_dev(button, "class", "breadcrumbs svelte-10tkv2b");
     			button.disabled = button_disabled_value = !/*selected*/ ctx[0].parent;
-    			add_location(button, file, 103, 4, 3450);
+    			add_location(button, file, 136, 4, 4583);
     			attr_dev(div, "class", "chart svelte-10tkv2b");
-    			add_location(div, file, 107, 4, 3604);
+    			add_location(div, file, 140, 4, 4737);
     			attr_dev(ul, "class", "uk-list uk-list-striped");
-    			add_location(ul, file, 127, 4, 4243);
+    			add_location(ul, file, 160, 4, 5376);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -7332,14 +7332,14 @@ var app = (function () {
     			if (dirty & /*$extents*/ 4) pancake_chart_changes.y1 = /*$extents*/ ctx[2].y1;
     			if (dirty & /*$extents*/ 4) pancake_chart_changes.y2 = /*$extents*/ ctx[2].y2;
 
-    			if (dirty & /*$$scope, root, selected*/ 131075) {
+    			if (dirty & /*$$scope, root, selected*/ 262147) {
     				pancake_chart_changes.$$scope = { dirty, ctx };
     			}
 
     			pancake_chart.$set(pancake_chart_changes);
 
     			if (dirty & /*getProjectData*/ 128) {
-    				each_value = /*projectInfo*/ ctx[11].files;
+    				each_value = /*projectInfo*/ ctx[12].files;
     				validate_each_argument(each_value);
     				let i;
 
@@ -7390,23 +7390,23 @@ var app = (function () {
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(98:2) {:then projectInfo}",
+    		source: "(131:2) {:then projectInfo}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:10) {#if is_visible(node, selected)}
+    // (144:10) {#if is_visible(node, selected)}
     function create_if_block(ctx) {
     	let div1;
     	let div0;
     	let strong;
-    	let t0_value = /*node*/ ctx[15].data.name + "";
+    	let t0_value = /*node*/ ctx[16].data.name + "";
     	let t0;
     	let t1;
     	let span;
-    	let t2_value = commas(/*node*/ ctx[15].value) + "";
+    	let t2_value = commas(/*node*/ ctx[16].value) + "";
     	let t2;
     	let div1_transition;
     	let current;
@@ -7414,7 +7414,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler_1() {
-    		return /*click_handler_1*/ ctx[9](/*node*/ ctx[15]);
+    		return /*click_handler_1*/ ctx[9](/*node*/ ctx[16]);
     	}
 
     	const block = {
@@ -7427,14 +7427,14 @@ var app = (function () {
     			span = element("span");
     			t2 = text(t2_value);
     			attr_dev(strong, "class", "svelte-10tkv2b");
-    			add_location(strong, file, 118, 16, 4037);
+    			add_location(strong, file, 151, 16, 5170);
     			attr_dev(span, "class", "svelte-10tkv2b");
-    			add_location(span, file, 119, 16, 4087);
+    			add_location(span, file, 152, 16, 5220);
     			attr_dev(div0, "class", "contents svelte-10tkv2b");
-    			add_location(div0, file, 117, 14, 3998);
+    			add_location(div0, file, 150, 14, 5131);
     			attr_dev(div1, "class", "node svelte-10tkv2b");
-    			toggle_class(div1, "leaf", !/*node*/ ctx[15].children);
-    			add_location(div1, file, 111, 12, 3803);
+    			toggle_class(div1, "leaf", !/*node*/ ctx[16].children);
+    			add_location(div1, file, 144, 12, 4936);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -7453,11 +7453,11 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if ((!current || dirty & /*node*/ 32768) && t0_value !== (t0_value = /*node*/ ctx[15].data.name + "")) set_data_dev(t0, t0_value);
-    			if ((!current || dirty & /*node*/ 32768) && t2_value !== (t2_value = commas(/*node*/ ctx[15].value) + "")) set_data_dev(t2, t2_value);
+    			if ((!current || dirty & /*node*/ 65536) && t0_value !== (t0_value = /*node*/ ctx[16].data.name + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty & /*node*/ 65536) && t2_value !== (t2_value = commas(/*node*/ ctx[16].value) + "")) set_data_dev(t2, t2_value);
 
-    			if (dirty & /*node*/ 32768) {
-    				toggle_class(div1, "leaf", !/*node*/ ctx[15].children);
+    			if (dirty & /*node*/ 65536) {
+    				toggle_class(div1, "leaf", !/*node*/ ctx[16].children);
     			}
     		},
     		i: function intro(local) {
@@ -7487,16 +7487,16 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(111:10) {#if is_visible(node, selected)}",
+    		source: "(144:10) {#if is_visible(node, selected)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (110:8) <Treemap {root} let:node>
+    // (143:8) <Treemap {root} let:node>
     function create_default_slot_1(ctx) {
-    	let show_if = /*is_visible*/ ctx[5](/*node*/ ctx[15], /*selected*/ ctx[0]);
+    	let show_if = /*is_visible*/ ctx[5](/*node*/ ctx[16], /*selected*/ ctx[0]);
     	let if_block_anchor;
     	let current;
     	let if_block = show_if && create_if_block(ctx);
@@ -7512,13 +7512,13 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*node, selected*/ 32769) show_if = /*is_visible*/ ctx[5](/*node*/ ctx[15], /*selected*/ ctx[0]);
+    			if (dirty & /*node, selected*/ 65537) show_if = /*is_visible*/ ctx[5](/*node*/ ctx[16], /*selected*/ ctx[0]);
 
     			if (show_if) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty & /*node, selected*/ 32769) {
+    					if (dirty & /*node, selected*/ 65537) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -7556,26 +7556,26 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(110:8) <Treemap {root} let:node>",
+    		source: "(143:8) <Treemap {root} let:node>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (109:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>
+    // (142:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>
     function create_default_slot(ctx) {
-    	let treemap;
+    	let treemap_1;
     	let current;
 
-    	treemap = new Treemap({
+    	treemap_1 = new Treemap({
     			props: {
     				root: /*root*/ ctx[1],
     				$$slots: {
     					default: [
     						create_default_slot_1,
-    						({ node }) => ({ 15: node }),
-    						({ node }) => node ? 32768 : 0
+    						({ node }) => ({ 16: node }),
+    						({ node }) => node ? 65536 : 0
     					]
     				},
     				$$scope: { ctx }
@@ -7585,33 +7585,33 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			create_component(treemap.$$.fragment);
+    			create_component(treemap_1.$$.fragment);
     		},
     		m: function mount(target, anchor) {
-    			mount_component(treemap, target, anchor);
+    			mount_component(treemap_1, target, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const treemap_changes = {};
-    			if (dirty & /*root*/ 2) treemap_changes.root = /*root*/ ctx[1];
+    			const treemap_1_changes = {};
+    			if (dirty & /*root*/ 2) treemap_1_changes.root = /*root*/ ctx[1];
 
-    			if (dirty & /*$$scope, node, selected*/ 163841) {
-    				treemap_changes.$$scope = { dirty, ctx };
+    			if (dirty & /*$$scope, node, selected*/ 327681) {
+    				treemap_1_changes.$$scope = { dirty, ctx };
     			}
 
-    			treemap.$set(treemap_changes);
+    			treemap_1.$set(treemap_1_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(treemap.$$.fragment, local);
+    			transition_in(treemap_1.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(treemap.$$.fragment, local);
+    			transition_out(treemap_1.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_component(treemap, detaching);
+    			destroy_component(treemap_1, detaching);
     		}
     	};
 
@@ -7619,17 +7619,17 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(109:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>",
+    		source: "(142:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (129:6) {#each projectInfo.files as file, i}
+    // (162:6) {#each projectInfo.files as file, i}
     function create_each_block(ctx) {
     	let li;
-    	let t0_value = /*file*/ ctx[12].name + "";
+    	let t0_value = /*file*/ ctx[13].name + "";
     	let t0;
     	let t1;
 
@@ -7638,7 +7638,7 @@ var app = (function () {
     			li = element("li");
     			t0 = text(t0_value);
     			t1 = space();
-    			add_location(li, file, 129, 8, 4331);
+    			add_location(li, file, 162, 8, 5464);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -7655,14 +7655,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(129:6) {#each projectInfo.files as file, i}",
+    		source: "(162:6) {#each projectInfo.files as file, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (96:27)      <p>...waiting</p>   {:then projectInfo}
+    // (129:27)      <p>...waiting</p>   {:then projectInfo}
     function create_pending_block(ctx) {
     	let p;
 
@@ -7670,7 +7670,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file, 96, 4, 3265);
+    			add_location(p, file, 129, 4, 4398);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -7687,7 +7687,7 @@ var app = (function () {
     		block,
     		id: create_pending_block.name,
     		type: "pending",
-    		source: "(96:27)      <p>...waiting</p>   {:then projectInfo}",
+    		source: "(129:27)      <p>...waiting</p>   {:then projectInfo}",
     		ctx
     	});
 
@@ -7712,8 +7712,8 @@ var app = (function () {
     		pending: create_pending_block,
     		then: create_then_block,
     		catch: create_catch_block,
-    		value: 11,
-    		error: 16,
+    		value: 12,
+    		error: 17,
     		blocks: [,,,]
     	};
 
@@ -7735,7 +7735,7 @@ var app = (function () {
     			if (script1.src !== (script1_src_value = "https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit-icons.min.js")) attr_dev(script1, "src", script1_src_value);
     			add_location(script1, file, 4, 2, 223);
     			attr_dev(main, "class", "svelte-10tkv2b");
-    			add_location(main, file, 94, 0, 3226);
+    			add_location(main, file, 127, 0, 4359);
     		},
     		l: function claim(nodes) {
     			throw new Error_1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7832,6 +7832,7 @@ var app = (function () {
     			});
     	};
 
+    	const treemap = index();
     	const extents = tweened(undefined, { easing: cubicOut, duration: 600 });
     	validate_store(extents, "extents");
     	component_subscribe($$self, extents, value => $$invalidate(2, $extents = value));
@@ -7842,16 +7843,16 @@ var app = (function () {
     		const crumbs = [];
 
     		while (node) {
+    			console.log("bread", node);
     			crumbs.unshift(node.data.name);
     			node = node.parent;
     		}
 
-    		return crumbs.join("/");
+    		const b = crumbs.join("/");
+    		return b.startsWith("/") ? b.substring(1) : b;
     	};
 
     	const is_visible = (a, b) => {
-    		console.log("is_visible", a, b);
-
     		while (b) {
     			if (a.parent === b) return true;
     			b = b.parent;
@@ -7860,35 +7861,66 @@ var app = (function () {
     		return false;
     	};
 
-    	const select = node => {
-    		console.log("select", 1);
-
+    	const select = node => __awaiter(void 0, void 0, void 0, function* () {
     		while (node.parent && node.parent !== selected) {
-    			console.log("select", 2);
     			node = node.parent;
     		}
 
-    		console.log("select", 3);
     		if (node && node.children) $$invalidate(0, selected = node);
     		console.log("select", selected);
-    	};
+    		console.log("breadcrumbs", breadcrumbs(node));
+    		$$invalidate(0, selected = node);
+    	}); // const res = await fetch(`http://localhost:8000/files?path=${breadcrumbs(node)}`);
+    	// const text = await res.json();
+    	// console.log("TEXT", text)
+    	// text.files.map(a => {
+    	//   console.log(a)
+    	//   if (a.isDirectory) {
 
+    	//     a.children = [{
+    	//       "name": ""
+    	//     }];
+    	//   }
+    	// });
+    	// // selected.children = text.files;
+    	// const hierarchyData = {
+    	//   name: node.data.name,
+    	//   children: text.files
+    	// }
+    	// const hierarchy = d3.hierarchy(hierarchyData)
+    	//   .sum(d => d.lines)
+    	//   .sort((a, b) => b.lines - a.lines)
+    	// console.log("hierarchy", hierarchy)
+    	// root = treemap(hierarchy);
+    	// selected.parent = node;
+    	// selected = root;
     	function getProjectData() {
     		return __awaiter(this, void 0, void 0, function* () {
     			const res = yield fetch(`http://localhost:8000/files?path=`);
     			const text = yield res.json();
 
     			if (res.ok) {
-    				const treemap = index();
-
     				// const hierarchy = d3.hierarchy(data)
     				//   .sum(d => d.value)
     				//   .sort((a, b) => b.value - a.value)
-    				const hierarchyData = { name: "/", children: text.files };
+    				// text.files.map(a => {
+    				//   console.log(a)
+    				//   if (a.isDirectory) {
+    				//     a.children = [{
+    				//       name: ""
+    				//     }];
+    				//   }
+    				// });
+    				// console.log("files", text.files)
+    				// const hierarchyData = {
+    				//   name: "",
+    				//   children: text.files
+    				// }
+    				const hierarchy$1 = hierarchy(text, a => a.files).sum(d => d.lines).sort((a, b) => b.lines - a.lines);
 
-    				const hierarchy$1 = hierarchy(hierarchyData).sum(d => d.Lines).sort((a, b) => b.Lines - a.Lines);
     				console.log("hierarchy", hierarchy$1);
     				$$invalidate(1, root = treemap(hierarchy$1));
+    				console.log("ROOT", root);
     				$$invalidate(0, selected = root);
     				return text;
     			} else {
@@ -7916,6 +7948,7 @@ var app = (function () {
     		yootils,
     		Treemap,
     		data,
+    		treemap,
     		extents,
     		selected,
     		root,

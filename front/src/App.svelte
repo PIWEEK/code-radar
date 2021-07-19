@@ -18,6 +18,8 @@
 	import Treemap from './Treemap.svelte';
 	import data from './data.js';
 
+  const treemap = d3.treemap();
+
   const extents = tweened(undefined, {
     easing: eases.cubicOut,
     duration: 600
@@ -37,15 +39,15 @@
   const breadcrumbs = node => {
     const crumbs = [];
     while (node) {
+      console.log("bread", node)
       crumbs.unshift(node.data.name)
       node = node.parent;
     }
-
-    return crumbs.join('/');
+		const b = crumbs.join('/');
+    return b.startsWith('/') ? b.substring(1) : b;
   };
 
   const is_visible = (a, b) => {
-    console.log("is_visible", a ,b)
     while (b) {
       if (a.parent === b) return true;
       b = b.parent;
@@ -54,16 +56,49 @@
     return false;
   };
 
-  const select = node => {
-    console.log("select", 1)
+  const select = async (node) => {
     while (node.parent && node.parent !== selected) {
-      console.log("select", 2)
       node = node.parent;
     }
-    console.log("select", 3)
 
     if (node && node.children) selected = node;
-    console.log("select", selected)
+    console.log("select", selected);
+
+    console.log("breadcrumbs", breadcrumbs(node))
+
+    selected = node;
+
+    // const res = await fetch(`http://localhost:8000/files?path=${breadcrumbs(node)}`);
+		// const text = await res.json();
+
+    // console.log("TEXT", text)
+
+    // text.files.map(a => {
+    //   console.log(a)
+    //   if (a.isDirectory) {
+    //     a.children = [{
+    //       "name": ""
+    //     }];
+    //   }
+    // });
+
+    // // selected.children = text.files;
+
+    // const hierarchyData = {
+    //   name: node.data.name,
+    //   children: text.files
+    // }
+
+    // const hierarchy = d3.hierarchy(hierarchyData)
+    //   .sum(d => d.lines)
+    //   .sort((a, b) => b.lines - a.lines)
+
+    // console.log("hierarchy", hierarchy)
+
+    // root = treemap(hierarchy);
+
+    // selected.parent = node;
+    // selected = root;
   };
 
 	async function getProjectData() {
@@ -71,25 +106,34 @@
 		const text = await res.json();
 
 		if (res.ok) {
-      const treemap = d3.treemap();
-
       // const hierarchy = d3.hierarchy(data)
       //   .sum(d => d.value)
       //   .sort((a, b) => b.value - a.value)
+      // text.files.map(a => {
+      //   console.log(a)
+      //   if (a.isDirectory) {
+      //     a.children = [{
+      //       name: ""
+      //     }];
+      //   }
+      // });
 
-      const hierarchyData = {
-        name: "/",
-        children: text.files
-      }
+      // console.log("files", text.files)
 
-      const hierarchy = d3.hierarchy(hierarchyData)
-        .sum(d => d.Lines)
-        .sort((a, b) => b.Lines - a.Lines)
+      // const hierarchyData = {
+      //   name: "",
+      //   children: text.files
+      // }
+
+      const hierarchy = d3.hierarchy(text, (a) => a.files)
+        .sum(d => d.lines)
+        .sort((a, b) => b.lines - a.lines)
 
       console.log("hierarchy", hierarchy)
 
       root = treemap(hierarchy);
-      
+
+      console.log("ROOT", root)
       selected = root;
 
 			return text;
