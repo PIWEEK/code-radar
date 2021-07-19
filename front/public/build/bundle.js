@@ -575,7 +575,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (44:2) {:catch error}
+    // (52:2) {:catch error}
     function create_catch_block(ctx) {
     	let p;
     	let t_value = /*error*/ ctx[6].message + "";
@@ -586,7 +586,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file, 44, 4, 1580);
+    			add_location(p, file, 52, 4, 1991);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -602,16 +602,16 @@ var app = (function () {
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(44:2) {:catch error}",
+    		source: "(52:2) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (35:2) {:then projectInfo}
+    // (43:2) {:then projectInfo}
     function create_then_block(ctx) {
-    	let p;
+    	let h1;
     	let t0_value = /*projectInfo*/ ctx[2].name + "";
     	let t0;
     	let t1;
@@ -629,7 +629,7 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			p = element("p");
+    			h1 = element("h1");
     			t0 = text(t0_value);
     			t1 = text(" - ");
     			t2 = text(t2_value);
@@ -640,14 +640,16 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(p, file, 35, 4, 1350);
-    			add_location(ul, file, 36, 4, 1400);
+    			attr_dev(h1, "class", "uk-heading-medium uk-heading-divider");
+    			add_location(h1, file, 43, 4, 1682);
+    			attr_dev(ul, "class", "uk-list uk-list-striped");
+    			add_location(ul, file, 44, 4, 1779);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
-    			append_dev(p, t0);
-    			append_dev(p, t1);
-    			append_dev(p, t2);
+    			insert_dev(target, h1, anchor);
+    			append_dev(h1, t0);
+    			append_dev(h1, t1);
+    			append_dev(h1, t2);
     			insert_dev(target, t3, anchor);
     			insert_dev(target, ul, anchor);
 
@@ -681,7 +683,7 @@ var app = (function () {
     			}
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(h1);
     			if (detaching) detach_dev(t3);
     			if (detaching) detach_dev(ul);
     			destroy_each(each_blocks, detaching);
@@ -692,14 +694,14 @@ var app = (function () {
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(35:2) {:then projectInfo}",
+    		source: "(43:2) {:then projectInfo}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (38:6) {#each projectInfo.files as file, i}
+    // (46:6) {#each projectInfo.files as file, i}
     function create_each_block(ctx) {
     	let li;
     	let t0_value = buildPath(/*file*/ ctx[3].path, /*file*/ ctx[3].name, /*file*/ ctx[3].extension) + "";
@@ -711,7 +713,7 @@ var app = (function () {
     			li = element("li");
     			t0 = text(t0_value);
     			t1 = space();
-    			add_location(li, file, 38, 8, 1456);
+    			add_location(li, file, 46, 8, 1867);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -728,14 +730,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(38:6) {#each projectInfo.files as file, i}",
+    		source: "(46:6) {#each projectInfo.files as file, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (33:27)      <p>...waiting</p>   {:then projectInfo}
+    // (41:27)      <p>...waiting</p>   {:then projectInfo}
     function create_pending_block(ctx) {
     	let p;
 
@@ -743,7 +745,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file, 33, 4, 1306);
+    			add_location(p, file, 41, 4, 1638);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -758,7 +760,7 @@ var app = (function () {
     		block,
     		id: create_pending_block.name,
     		type: "pending",
-    		source: "(33:27)      <p>...waiting</p>   {:then projectInfo}",
+    		source: "(41:27)      <p>...waiting</p>   {:then projectInfo}",
     		ctx
     	});
 
@@ -766,6 +768,12 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
+    	let link;
+    	let script0;
+    	let script0_src_value;
+    	let script1;
+    	let script1_src_value;
+    	let t;
     	let main;
 
     	let info = {
@@ -784,15 +792,30 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
+    			link = element("link");
+    			script0 = element("script");
+    			script1 = element("script");
+    			t = space();
     			main = element("main");
     			info.block.c();
+    			attr_dev(link, "rel", "stylesheet");
+    			attr_dev(link, "href", "https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/css/uikit.min.css");
+    			add_location(link, file, 1, 2, 16);
+    			if (script0.src !== (script0_src_value = "https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit.min.js")) attr_dev(script0, "src", script0_src_value);
+    			add_location(script0, file, 3, 2, 135);
+    			if (script1.src !== (script1_src_value = "https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit-icons.min.js")) attr_dev(script1, "src", script1_src_value);
+    			add_location(script1, file, 4, 2, 223);
     			attr_dev(main, "class", "svelte-os8pjd");
-    			add_location(main, file, 31, 0, 1267);
+    			add_location(main, file, 39, 0, 1599);
     		},
     		l: function claim(nodes) {
     			throw new Error_1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
+    			append_dev(document.head, link);
+    			append_dev(document.head, script0);
+    			append_dev(document.head, script1);
+    			insert_dev(target, t, anchor);
     			insert_dev(target, main, anchor);
     			info.block.m(main, info.anchor = null);
     			info.mount = () => main;
@@ -805,6 +828,10 @@ var app = (function () {
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
+    			detach_dev(link);
+    			detach_dev(script0);
+    			detach_dev(script1);
+    			if (detaching) detach_dev(t);
     			if (detaching) detach_dev(main);
     			info.block.d();
     			info.token = null;

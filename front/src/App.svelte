@@ -1,3 +1,11 @@
+<svelte:head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/css/uikit.min.css" />
+  <!-- UIkit JS -->
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit-icons.min.js"></script>
+</svelte:head>
+
+
 <script lang="ts">
 	// export let name: string;
 	async function getProjectData() {
@@ -24,8 +32,8 @@
   {#await getProjectData()}
     <p>...waiting</p>
   {:then projectInfo}
-    <p>{projectInfo.name} - {projectInfo.url}</p>
-    <ul>
+    <h1 class="uk-heading-medium uk-heading-divider">{projectInfo.name} - {projectInfo.url}</h1>
+    <ul class="uk-list uk-list-striped">
       {#each projectInfo.files as file, i}
         <li>
           {buildPath(file.path, file.name, file.extension)}
