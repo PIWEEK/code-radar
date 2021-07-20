@@ -37,7 +37,8 @@
   };
 
   const hierarchyData = {
-    name: ""
+    name: "",
+    children: {}
   };
 
   function breadcrumbs(node) {
@@ -90,7 +91,6 @@
   }
 
 	async function getProjectData() {
-    console.log("getProjectData", dimension)
 		const res = await fetch(`http://localhost:8000/files`);
 		const json = await res.json();
 
@@ -100,6 +100,9 @@
         if (f.isDirectory) {
           path = path.concat([f.name])
         }
+
+
+        console.log(1, path);
 
         let d = hierarchyData;
         path.forEach((p) => {
@@ -114,6 +117,7 @@
             d.children = {};
           }
         });
+        console.log("--------", f.name, f.isDirectory)
         if (!f.isDirectory) {
           d.children[f.name] = {
             lines: f.lines,
@@ -126,6 +130,7 @@
       });
 
       flattenData(hierarchyData)
+      console.log(hierarchyData)
 
       const hierarchy = d3.hierarchy(hierarchyData)
         .sum(d => d.lines)
@@ -142,9 +147,6 @@
 
   function onChangeDimension(event) {
 		const val = event.currentTarget.value;
-    console.log("ASDASDASD", val, dimension)
-    // getProjectData();
-
     const hierarchy = d3.hierarchy(hierarchyData)
       .sum(d => d[val])
       .sort((a, b) => b[val] - a[val])
