@@ -12,8 +12,10 @@ func StartTransaction() {
 
 func Commit() {
 	txn.Commit()
+	txn = nil
 }
 
 func Rollback() {
 	txn.Abort()
+	txn = nil
 }

@@ -1,9 +1,23 @@
 package db
 
-func ListFiles() ([](*FileDB), error) {
-	t := db.Txn(false)
+func GetFile(path string) (*FileDB, error) {
+	raw, err := txn.First("files", "path", path)
 
-	it, err := t.Get("files", "parent")
+	if err != nil {
+		return nil, err
+	}
+
+	if raw == nil {
+		return nil, nil
+	}
+
+	return raw.(*FileDB), nil
+}
+
+func ListFiles() ([](*FileDB), error) {
+	txn := db.Txn(false)
+
+	it, err := txn.Get("files", "path")
 
 	if err != nil {
 		return nil, err

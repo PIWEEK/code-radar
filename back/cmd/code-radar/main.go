@@ -13,14 +13,18 @@ import (
 func main() {
 	var err error
 
-	if (len (os.Args) != 3) {
-		log.Fatal("coderadar [name] [url]")
+	if (len (os.Args) != 2 && len (os.Args) != 3) {
+		log.Fatal("coderadar <name> [<url>]")
 	}
 
 	name := os.Args[1]
-	url  := os.Args[2]
 
-	log.Println("Repository:", url)
+	var url string
+
+	if len(os.Args) == 3 {
+		url  = os.Args[2]
+	}
+
 	global.InitInfo(name, url)
 
 	err = db.InitializeDB()

@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"math/rand"
 	"net/http"
 	"path/filepath"
 
@@ -53,8 +52,8 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 			Name: file.Name,
 			Directory: directory,
 			Extension: extension,
-			Lines: rand.Int() % 10000,
-			Rating: rand.Float32(),
+			Lines: file.Lines,
+			Rating: file.Rating,
 			IsDirectory: isDir,
 		})
 	}
