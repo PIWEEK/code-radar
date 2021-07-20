@@ -36,10 +36,9 @@
   };
 
 
-  const breadcrumbs = node => {
+  function breadcrumbs(node) {
     const crumbs = [];
     while (node) {
-      console.log("bread", node)
       crumbs.unshift(node.data.name)
       node = node.parent;
     }
@@ -47,7 +46,7 @@
     return b.startsWith('/') ? b.substring(1) : b;
   };
 
-  const is_visible = (a, b) => {
+  function is_visible(a, b) {
     while (b) {
       if (a.parent === b) return true;
       b = b.parent;
@@ -56,89 +55,83 @@
     return false;
   };
 
-  const select = async (node) => {
+  async function select(node) {
     while (node.parent && node.parent !== selected) {
       node = node.parent;
     }
-
     if (node && node.children) selected = node;
-    console.log("select", selected);
-
-    console.log("breadcrumbs", breadcrumbs(node))
-
     selected = node;
-
-    // const res = await fetch(`http://localhost:8000/files?path=${breadcrumbs(node)}`);
-		// const text = await res.json();
-
-    // console.log("TEXT", text)
-
-    // text.files.map(a => {
-    //   console.log(a)
-    //   if (a.isDirectory) {
-    //     a.children = [{
-    //       "name": ""
-    //     }];
-    //   }
-    // });
-
-    // // selected.children = text.files;
-
-    // const hierarchyData = {
-    //   name: node.data.name,
-    //   children: text.files
-    // }
-
-    // const hierarchy = d3.hierarchy(hierarchyData)
-    //   .sum(d => d.lines)
-    //   .sort((a, b) => b.lines - a.lines)
-
-    // console.log("hierarchy", hierarchy)
-
-    // root = treemap(hierarchy);
-
-    // selected.parent = node;
-    // selected = root;
   };
 
+  function flattenData( hierarchyData) {
+    let keys = Object.keys(hierarchyData);
+    if (hierarchyData.children === undefined) {
+      return hierarchyData;
+    }
+    else {
+      const children = [];
+      Object.keys(hierarchyData.children).forEach((key) => {
+        children.push(
+          {
+            ...flattenData(hierarchyData.children[key]),
+            name: key
+          }
+        );
+      });
+      hierarchyData.children = children;
+      return hierarchyData;
+    }
+  }
+
 	async function getProjectData() {
-		const res = await fetch(`http://localhost:8000/files?path=`);
-		const text = await res.json();
+		const res = await fetch(`http://localhost:8000/files`);
+		const json = await res.json();
 
 		if (res.ok) {
-      // const hierarchy = d3.hierarchy(data)
-      //   .sum(d => d.value)
-      //   .sort((a, b) => b.value - a.value)
-      // text.files.map(a => {
-      //   console.log(a)
-      //   if (a.isDirectory) {
-      //     a.children = [{
-      //       name: ""
-      //     }];
-      //   }
-      // });
+      const hierarchyData = {
+        name: ""
+      };
 
-      // console.log("files", text.files)
+      json.files.forEach((f) => {
+        let path = f.directory  ? f.directory.split("/") : [];
+        if (f.isDirectory) {
+          path = path.concat([f.name])
+        }
 
-      // const hierarchyData = {
-      //   name: "",
-      //   children: text.files
-      // }
+        let d = hierarchyData;
+        path.forEach((p) => {
+          if(!d.children) {
+            d.children = {};
+          }
+          if (!d.children[p]) {
+            d.children[p] = {};
+          }
+          d = d.children[p];
+          if(!d.children) {
+            d.children = {};
+          }
+        });
+        if (!f.isDirectory) {
+          d.children[f.name] = {
+            lines: f.lines,
+            rating: f.rating
+          };
+        }
 
-      const hierarchy = d3.hierarchy(text, (a) => a.files)
+      });
+
+      flattenData(hierarchyData)
+
+      const hierarchy = d3.hierarchy(hierarchyData)
         .sum(d => d.lines)
         .sort((a, b) => b.lines - a.lines)
 
-      console.log("hierarchy", hierarchy)
-
       root = treemap(hierarchy);
-
-      console.log("ROOT", root)
       selected = root;
 
-			return text;
+			return json;
 		} else {
-			throw new Error(text);
+			throw new Error(json);
 		}
 	}
 
@@ -197,13 +190,6 @@
 		max-width: 240px;
 		margin: 0 auto;
 	}
-
-	/* h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	} */
 
 	@media (min-width: 640px) {
 		main {
