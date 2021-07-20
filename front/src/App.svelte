@@ -66,11 +66,9 @@
     }
     if (node && node.children) selected = node;
     selected = node;
-
-    console.log("selected", node.data)
   };
 
-  function flattenData( hierarchyData) {
+  function flattenData(hierarchyData) {
     let keys = Object.keys(hierarchyData);
     if (hierarchyData.children === undefined) {
       return hierarchyData;
@@ -85,6 +83,7 @@
           }
         );
       });
+
       hierarchyData.children = children;
       return hierarchyData;
     }
@@ -101,9 +100,6 @@
           path = path.concat([f.name])
         }
 
-
-        console.log(1, path);
-
         let d = hierarchyData;
         path.forEach((p) => {
           if(!d.children) {
@@ -117,7 +113,7 @@
             d.children = {};
           }
         });
-        console.log("--------", f.name, f.isDirectory)
+
         if (!f.isDirectory) {
           d.children[f.name] = {
             lines: f.lines,
@@ -130,7 +126,6 @@
       });
 
       flattenData(hierarchyData)
-      console.log(hierarchyData)
 
       const hierarchy = d3.hierarchy(hierarchyData)
         .sum(d => d.lines)
