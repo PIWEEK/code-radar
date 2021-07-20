@@ -61,6 +61,8 @@
     }
     if (node && node.children) selected = node;
     selected = node;
+
+    console.log("selected", node.data)
   };
 
   function flattenData( hierarchyData) {
@@ -116,8 +118,10 @@
             lines: f.lines,
             rating: f.rating
           };
+        } else{
+          d.lines = f.lines;
+          d.rating = f.rating;
         }
-
       });
 
       flattenData(hierarchyData)
@@ -170,6 +174,18 @@
       </Pancake.Chart>
     </div>
 
+    <div class="analytics">
+      <ul>
+        {#if selected.data.lines}
+        <li>Lines: {selected.data.lines}</li>
+        {/if}
+        {#if selected.data.rating}
+        <li>Rating: {selected.data.rating}</li>
+        {/if}
+      </ul>
+    </div>
+
+<!--
     <ul class="uk-list uk-list-striped">
       {#each projectInfo.files as file, i}
         <li>
@@ -177,6 +193,7 @@
         </li>
       {/each}
     </ul>
+-->
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
@@ -214,12 +231,19 @@
 	}
 
 	.chart {
-		width: calc(100% + 2px);
+    float: left;
+		width: calc(80% + 2px);
 		height: 400px;
 		padding: 0;
 		margin: 0 -1px 36px -1px;
 		overflow: hidden;
 	}
+
+  .analytics {
+    width: calc(20% - 2px);
+		height: 400px;
+    float: right;
+  }
 
 	.node {
 		position: absolute;
@@ -255,4 +279,8 @@
 		white-space: nowrap;
 		line-height: 1;
 	}
+
+  .uk-list {
+    clear: both;
+  }
 </style>
