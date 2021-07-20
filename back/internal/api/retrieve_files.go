@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"path/filepath"
+	"math/rand"
+	"fmt"
+	"time"
 
 	"github.com/piweek/code-radar/internal/db"
 	"github.com/piweek/code-radar/internal/global"
@@ -22,7 +25,9 @@ type RetrieveFilesResponseFile struct {
 	Lines int `json:"lines"`
 	Rating float32 `json:"rating"`
 	IsDirectory bool `json:"isDirectory"`
+	History []string `json:"history"`
 }
+
 
 func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -48,13 +53,25 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 			extension = filepath.Ext(file.Name)
 		}
 
+		var history []string
+
+		for _, h := range file.History {
+			history = append(history, fmt.Sprintf("[%s]%s: +%d -%d",
+				h.Date.Format(time.RFC3339),
+				h.User,
+				h.Added,
+				h.Deleted,
+			))
+		}
+
 		responseFiles = append(responseFiles, RetrieveFilesResponseFile {
 			Name: file.Name,
 			Directory: directory,
 			Extension: extension,
 			Lines: file.Lines,
-			Rating: file.Rating,
+			Rating: rand.Float32(),
 			IsDirectory: isDir,
+			History: history,
 		})
 	}
 

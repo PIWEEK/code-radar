@@ -2,9 +2,8 @@ package parser
 
 import (
 	"log"
+	"fmt"
 	"os"
-	//	"path/filepath"
-	//"strings"
 	"context"
 
 	"github.com/go-git/go-git/v5"
@@ -14,32 +13,7 @@ import (
 	"github.com/piweek/code-radar/internal/db"
 )
 
-func CheckError(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
-	
-	stats, err := commit.Stats()
-
-	if err != nil {
-		return err
-	}
-
-	// log.Println("Processing", commit.Hash)
-	// log.Println("====")
-	// log.Println(commit.Message)
-	// log.Println(commit.Author.When, commit.Author.Name, commit.Author.Email)
-	// log.Println("====")
-
-	statsMap := make(map[string]object.FileStat)
-
-	for _, stat := range stats {
-		statsMap[stat.Name] = stat
-	}
-
 	if (previous != nil) {
 		options := &object.DiffTreeOptions {
 			DetectRenames: true,
@@ -51,29 +25,47 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 		ctx := context.Background()
 		changes, err := object.DiffTreeWithOptions(ctx, prevTree, commitTree, options)
 
+		statsMap := make(map[string]object.FileStat)
+
+		patch, _ := changes.Patch()
+
+		stats := patch.Stats()
+
+		for _, stat := range stats {
+			statsMap[stat.Name] = stat
+		}
+
 		if err != nil {
 			return err
 		}
 
+		user := commit.Author.Email
+		date := commit.Author.When
+
 		for _, change := range changes {
 			name := change.To.Name
+			action, _ := change.Action()
+			fileStat := statsMap[name]
 
-			switch acc, _ := change.Action(); acc {
+			switch action {
 			  case merkletrie.Insert:
-				  err = db.UpdateFile(name, false, statsMap[name].Addition, 0, 0 /*rating*/)
+				  err = db.UpdateFile(name, false, fileStat.Addition, 0, user, date)
 			  	
 			  case merkletrie.Modify:
 			  	nameFrom := change.From.Name
 
 				  if nameFrom != name {
-				  	db.MoveFile(nameFrom, name)
+				  	err = db.MoveFile(nameFrom, name, user, date)
+
+						if err != nil {
+							return err
+						}
 				  }
 				  
-				  err = db.UpdateFile(name, false, statsMap[name].Addition, statsMap[name].Deletion, 0)
-				
+				  err = db.UpdateFile(name, false, fileStat.Addition, fileStat.Deletion, user, date)
 			  	
 			  case merkletrie.Delete:
-				  err = db.DeleteFile(name)
+				  err = db.DeleteFile(name, user, date)
 			}
 
 			if err != nil {
@@ -85,61 +77,6 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 	return nil
 }
 
-/*
-func ProcessCommit_newold(commit *object.Commit) error {
-	stats, err := commit.Stats()
-
-	if err != nil {
-		return err
-	}
-
-	log.Println("====")
-	log.Println(commit.Message)
-	log.Println(commit.Author.When, commit.Author.Name, commit.Author.Email)
-	log.Println("====")
-	for _, stat := range stats {
-		log.Println(stat.Name, stat.Addition, stat.Deletion)
-	}
-
-	return nil
-}
-
-func ProcessCommit_old(commit *object.Commit) error {
-	files, err := commit.Files()
-
-	err = files.ForEach(func(file *object.File) error {
-		var currentDir string
-
-		path := file.Name
-
-		// Insert entries for each of its parents
-		dirs := strings.Split(filepath.Dir(path), "/")
-
-		for _, dir := range dirs {
-			if currentDir == "" {
-				currentDir = dir
-			} else {
-				currentDir = currentDir + "/" + dir
-			}
-
-			if currentDir != "." {
-				err = db.InsertFile(currentDir, true)
-			}
-		}
-
-		err = db.InsertFile(path, false)
-
-		if (err != nil) {
-			return err
-		}
-		
-		return err
-	})
-
-	return err
-}
-*/
-   
 func ProcessRepository(url string) error {
 	var repo *git.Repository
 	var err error
@@ -165,11 +102,9 @@ func ProcessRepository(url string) error {
 		return err
 	}
 
-	options := git.LogOptions {
+	commitIt, err := repo.Log(&git.LogOptions{
 		From: ref.Hash(),
-	}
-	
-	commitIt, err := repo.Log(&options)
+	})
 
 	if err != nil {
 		return err
@@ -186,8 +121,11 @@ func ProcessRepository(url string) error {
 
 	db.StartTransaction()
 
+	fmt.Printf("Processing %d/%d\r", 0, len(commits))
+
 	for i := len(commits) - 1 ; i >= 0; i-- {
-		log.Printf("Processing %d/%d\n", len(commits) - i, len(commits))
+		fmt.Printf("Processing %d/%d\r", len(commits) - i, len(commits))
+
 		var prev *object.Commit
 
 		if i < len(commits) - 1 {
