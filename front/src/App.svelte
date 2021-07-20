@@ -280,7 +280,7 @@
 		line-height: 1;
 	}
 
-  .uk-list {
+  /* .uk-list {
     clear: both;
-  }
+  } */
 </style>

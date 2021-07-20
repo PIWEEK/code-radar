@@ -7276,13 +7276,13 @@ var app = (function () {
     			add_location(a, file, 141, 4, 4678);
     			attr_dev(h1, "class", "uk-heading-medium uk-heading-divider");
     			add_location(h1, file, 140, 4, 4624);
-    			attr_dev(button, "class", "breadcrumbs svelte-a9ei8p");
+    			attr_dev(button, "class", "breadcrumbs svelte-11gtj05");
     			button.disabled = button_disabled_value = !/*selected*/ ctx[0].parent;
     			add_location(button, file, 145, 4, 4765);
-    			attr_dev(div0, "class", "chart svelte-a9ei8p");
+    			attr_dev(div0, "class", "chart svelte-11gtj05");
     			add_location(div0, file, 149, 4, 4919);
     			add_location(ul, file, 170, 6, 5588);
-    			attr_dev(div1, "class", "analytics svelte-a9ei8p");
+    			attr_dev(div1, "class", "analytics svelte-11gtj05");
     			add_location(div1, file, 169, 4, 5558);
     		},
     		m: function mount(target, anchor) {
@@ -7418,13 +7418,13 @@ var app = (function () {
     			t1 = space();
     			span = element("span");
     			t2 = text(t2_value);
-    			attr_dev(strong, "class", "svelte-a9ei8p");
+    			attr_dev(strong, "class", "svelte-11gtj05");
     			add_location(strong, file, 160, 16, 5352);
-    			attr_dev(span, "class", "svelte-a9ei8p");
+    			attr_dev(span, "class", "svelte-11gtj05");
     			add_location(span, file, 161, 16, 5402);
-    			attr_dev(div0, "class", "contents svelte-a9ei8p");
+    			attr_dev(div0, "class", "contents svelte-11gtj05");
     			add_location(div0, file, 159, 14, 5313);
-    			attr_dev(div1, "class", "node svelte-a9ei8p");
+    			attr_dev(div1, "class", "node svelte-11gtj05");
     			toggle_class(div1, "leaf", !/*node*/ ctx[11].children);
     			add_location(div1, file, 153, 12, 5118);
     		},
@@ -7766,7 +7766,7 @@ var app = (function () {
     			add_location(script0, file, 3, 2, 135);
     			if (script1.src !== (script1_src_value = "https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit-icons.min.js")) attr_dev(script1, "src", script1_src_value);
     			add_location(script1, file, 4, 2, 223);
-    			attr_dev(main, "class", "svelte-a9ei8p");
+    			attr_dev(main, "class", "svelte-11gtj05");
     			add_location(main, file, 136, 0, 4541);
     		},
     		l: function claim(nodes) {
