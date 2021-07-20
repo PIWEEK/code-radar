@@ -93,6 +93,11 @@
 		const res = await fetch(`http://localhost:8000/files`);
 		const json = await res.json();
 
+    const maxLines = json.files.reduce((prev, current) => (prev.lines > current.lines) ? prev : current).lines;
+    const minLines = maxLines * .10;
+    const maxRating = json.files.reduce((prev, current) => (prev.rating > current.rating) ? prev : current).rating;
+    const minRating = maxRating * .10;
+
 		if (res.ok) {
       json.files.forEach((f) => {
         let path = f.directory  ? f.directory.split("/") : [];
@@ -125,7 +130,7 @@
         }
       });
 
-      flattenData(hierarchyData)
+      flattenData(hierarchyData);
 
       const hierarchy = d3.hierarchy(hierarchyData)
         .sum(d => d.lines)
@@ -197,10 +202,10 @@
 
     <div class="analytics">
       <ul>
-        {#if selected.data.lines}
+        {#if selected.data.lines != undefined}
         <li>Lines: {selected.data.lines}</li>
         {/if}
-        {#if selected.data.rating}
+        {#if selected.data.rating != undefined}
         <li>Rating: {selected.data.rating}</li>
         {/if}
       </ul>
