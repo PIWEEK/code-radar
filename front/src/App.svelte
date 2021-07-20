@@ -8,6 +8,7 @@
 
 <script lang="ts">
 	// export let name: string;
+  let dimension = 'lines';
 
 	import * as Pancake from '@sveltejs/pancake';
 	import * as d3 from 'd3-hierarchy';
@@ -35,6 +36,9 @@
     y2: selected ? selected.y0 : 0
   };
 
+  const hierarchyData = {
+    name: ""
+  };
 
   function breadcrumbs(node) {
     const crumbs = [];
@@ -86,14 +90,11 @@
   }
 
 	async function getProjectData() {
+    console.log("getProjectData", dimension)
 		const res = await fetch(`http://localhost:8000/files`);
 		const json = await res.json();
 
 		if (res.ok) {
-      const hierarchyData = {
-        name: ""
-      };
-
       json.files.forEach((f) => {
         let path = f.directory  ? f.directory.split("/") : [];
         if (f.isDirectory) {
@@ -139,6 +140,20 @@
 		}
 	}
 
+  function onChangeDimension(event) {
+		const val = event.currentTarget.value;
+    console.log("ASDASDASD", val, dimension)
+    // getProjectData();
+
+    const hierarchy = d3.hierarchy(hierarchyData)
+      .sum(d => d[val])
+      .sort((a, b) => b[val] - a[val])
+
+    root = treemap(hierarchy);
+    selected = root;
+
+	}
+
 </script>
 
 <main>
@@ -149,6 +164,15 @@
     <a href="{projectInfo.url}" target="_blank">{projectInfo.name}
     </a>
     </h1>
+
+    <label>
+      <input type=radio on:change={onChangeDimension} bind:group={dimension} name="dimension" value={'lines'}>
+      lines
+    </label>
+    <label>
+      <input type=radio on:change={onChangeDimension} bind:group={dimension} name="dimension" value={'rating'}>
+      rating
+    </label>
 
     <button class="breadcrumbs" disabled="{!selected.parent}" on:click="{() => selected = selected.parent}">
       {breadcrumbs(selected)}

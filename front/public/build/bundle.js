@@ -7181,10 +7181,10 @@ var app = (function () {
     const { Error: Error_1, Object: Object_1, console: console_1 } = globals;
     const file = "src/App.svelte";
 
-    // (190:2) {:catch error}
+    // (211:2) {:catch error}
     function create_catch_block(ctx) {
     	let p;
-    	let t_value = /*error*/ ctx[12].message + "";
+    	let t_value = /*error*/ ctx[18].message + "";
     	let t;
 
     	const block = {
@@ -7192,7 +7192,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file, 190, 4, 5995);
+    			add_location(p, file, 211, 4, 6655);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -7210,41 +7210,49 @@ var app = (function () {
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(190:2) {:catch error}",
+    		source: "(211:2) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (140:2) {:then projectInfo}
+    // (152:2) {:then projectInfo}
     function create_then_block(ctx) {
     	let h1;
     	let a;
-    	let t0_value = /*projectInfo*/ ctx[10].name + "";
+    	let t0_value = /*projectInfo*/ ctx[16].name + "";
     	let t0;
     	let t1;
-    	let button;
-    	let t2_value = breadcrumbs(/*selected*/ ctx[0]) + "";
+    	let label0;
+    	let input0;
     	let t2;
-    	let button_disabled_value;
     	let t3;
+    	let label1;
+    	let input1;
+    	let t4;
+    	let t5;
+    	let button;
+    	let t6_value = breadcrumbs(/*selected*/ ctx[0]) + "";
+    	let t6;
+    	let button_disabled_value;
+    	let t7;
     	let div0;
     	let pancake_chart;
-    	let t4;
+    	let t8;
     	let div1;
     	let ul;
-    	let t5;
+    	let t9;
     	let current;
     	let mounted;
     	let dispose;
 
     	pancake_chart = new Chart({
     			props: {
-    				x1: /*$extents*/ ctx[2].x1,
-    				x2: /*$extents*/ ctx[2].x2,
-    				y1: /*$extents*/ ctx[2].y1,
-    				y2: /*$extents*/ ctx[2].y2,
+    				x1: /*$extents*/ ctx[3].x1,
+    				x2: /*$extents*/ ctx[3].x2,
+    				y1: /*$extents*/ ctx[3].y1,
+    				y2: /*$extents*/ ctx[3].y2,
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
@@ -7260,68 +7268,115 @@ var app = (function () {
     			a = element("a");
     			t0 = text(t0_value);
     			t1 = space();
-    			button = element("button");
-    			t2 = text(t2_value);
+    			label0 = element("label");
+    			input0 = element("input");
+    			t2 = text("\n      lines");
     			t3 = space();
+    			label1 = element("label");
+    			input1 = element("input");
+    			t4 = text("\n      rating");
+    			t5 = space();
+    			button = element("button");
+    			t6 = text(t6_value);
+    			t7 = space();
     			div0 = element("div");
     			create_component(pancake_chart.$$.fragment);
-    			t4 = space();
+    			t8 = space();
     			div1 = element("div");
     			ul = element("ul");
     			if (if_block0) if_block0.c();
-    			t5 = space();
+    			t9 = space();
     			if (if_block1) if_block1.c();
-    			attr_dev(a, "href", /*projectInfo*/ ctx[10].url);
+    			attr_dev(a, "href", /*projectInfo*/ ctx[16].url);
     			attr_dev(a, "target", "_blank");
-    			add_location(a, file, 141, 4, 4678);
+    			add_location(a, file, 153, 4, 5039);
     			attr_dev(h1, "class", "uk-heading-medium uk-heading-divider");
-    			add_location(h1, file, 140, 4, 4624);
+    			add_location(h1, file, 152, 4, 4985);
+    			attr_dev(input0, "type", "radio");
+    			attr_dev(input0, "name", "dimension");
+    			input0.__value = "lines";
+    			input0.value = input0.__value;
+    			/*$$binding_groups*/ ctx[9][0].push(input0);
+    			add_location(input0, file, 158, 6, 5140);
+    			add_location(label0, file, 157, 4, 5126);
+    			attr_dev(input1, "type", "radio");
+    			attr_dev(input1, "name", "dimension");
+    			input1.__value = "rating";
+    			input1.value = input1.__value;
+    			/*$$binding_groups*/ ctx[9][0].push(input1);
+    			add_location(input1, file, 162, 6, 5288);
+    			add_location(label1, file, 161, 4, 5274);
     			attr_dev(button, "class", "breadcrumbs svelte-11gtj05");
     			button.disabled = button_disabled_value = !/*selected*/ ctx[0].parent;
-    			add_location(button, file, 145, 4, 4765);
+    			add_location(button, file, 166, 4, 5425);
     			attr_dev(div0, "class", "chart svelte-11gtj05");
-    			add_location(div0, file, 149, 4, 4919);
-    			add_location(ul, file, 170, 6, 5588);
+    			add_location(div0, file, 170, 4, 5579);
+    			add_location(ul, file, 191, 6, 6248);
     			attr_dev(div1, "class", "analytics svelte-11gtj05");
-    			add_location(div1, file, 169, 4, 5558);
+    			add_location(div1, file, 190, 4, 6218);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
     			append_dev(h1, a);
     			append_dev(a, t0);
     			insert_dev(target, t1, anchor);
-    			insert_dev(target, button, anchor);
-    			append_dev(button, t2);
+    			insert_dev(target, label0, anchor);
+    			append_dev(label0, input0);
+    			input0.checked = input0.__value === /*dimension*/ ctx[1];
+    			append_dev(label0, t2);
     			insert_dev(target, t3, anchor);
+    			insert_dev(target, label1, anchor);
+    			append_dev(label1, input1);
+    			input1.checked = input1.__value === /*dimension*/ ctx[1];
+    			append_dev(label1, t4);
+    			insert_dev(target, t5, anchor);
+    			insert_dev(target, button, anchor);
+    			append_dev(button, t6);
+    			insert_dev(target, t7, anchor);
     			insert_dev(target, div0, anchor);
     			mount_component(pancake_chart, div0, null);
-    			insert_dev(target, t4, anchor);
+    			insert_dev(target, t8, anchor);
     			insert_dev(target, div1, anchor);
     			append_dev(div1, ul);
     			if (if_block0) if_block0.m(ul, null);
-    			append_dev(ul, t5);
+    			append_dev(ul, t9);
     			if (if_block1) if_block1.m(ul, null);
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[6], false, false, false);
+    				dispose = [
+    					listen_dev(input0, "change", /*onChangeDimension*/ ctx[7], false, false, false),
+    					listen_dev(input0, "change", /*input0_change_handler*/ ctx[8]),
+    					listen_dev(input1, "change", /*onChangeDimension*/ ctx[7], false, false, false),
+    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[10]),
+    					listen_dev(button, "click", /*click_handler*/ ctx[11], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if ((!current || dirty & /*selected*/ 1) && t2_value !== (t2_value = breadcrumbs(/*selected*/ ctx[0]) + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*dimension*/ 2) {
+    				input0.checked = input0.__value === /*dimension*/ ctx[1];
+    			}
+
+    			if (dirty & /*dimension*/ 2) {
+    				input1.checked = input1.__value === /*dimension*/ ctx[1];
+    			}
+
+    			if ((!current || dirty & /*selected*/ 1) && t6_value !== (t6_value = breadcrumbs(/*selected*/ ctx[0]) + "")) set_data_dev(t6, t6_value);
 
     			if (!current || dirty & /*selected*/ 1 && button_disabled_value !== (button_disabled_value = !/*selected*/ ctx[0].parent)) {
     				prop_dev(button, "disabled", button_disabled_value);
     			}
 
     			const pancake_chart_changes = {};
-    			if (dirty & /*$extents*/ 4) pancake_chart_changes.x1 = /*$extents*/ ctx[2].x1;
-    			if (dirty & /*$extents*/ 4) pancake_chart_changes.x2 = /*$extents*/ ctx[2].x2;
-    			if (dirty & /*$extents*/ 4) pancake_chart_changes.y1 = /*$extents*/ ctx[2].y1;
-    			if (dirty & /*$extents*/ 4) pancake_chart_changes.y2 = /*$extents*/ ctx[2].y2;
+    			if (dirty & /*$extents*/ 8) pancake_chart_changes.x1 = /*$extents*/ ctx[3].x1;
+    			if (dirty & /*$extents*/ 8) pancake_chart_changes.x2 = /*$extents*/ ctx[3].x2;
+    			if (dirty & /*$extents*/ 8) pancake_chart_changes.y1 = /*$extents*/ ctx[3].y1;
+    			if (dirty & /*$extents*/ 8) pancake_chart_changes.y2 = /*$extents*/ ctx[3].y2;
 
-    			if (dirty & /*$$scope, root, selected*/ 8195) {
+    			if (dirty & /*$$scope, root, selected*/ 524293) {
     				pancake_chart_changes.$$scope = { dirty, ctx };
     			}
 
@@ -7333,7 +7388,7 @@ var app = (function () {
     				} else {
     					if_block0 = create_if_block_1(ctx);
     					if_block0.c();
-    					if_block0.m(ul, t5);
+    					if_block0.m(ul, t9);
     				}
     			} else if (if_block0) {
     				if_block0.d(1);
@@ -7365,16 +7420,22 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h1);
     			if (detaching) detach_dev(t1);
-    			if (detaching) detach_dev(button);
+    			if (detaching) detach_dev(label0);
+    			/*$$binding_groups*/ ctx[9][0].splice(/*$$binding_groups*/ ctx[9][0].indexOf(input0), 1);
     			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(label1);
+    			/*$$binding_groups*/ ctx[9][0].splice(/*$$binding_groups*/ ctx[9][0].indexOf(input1), 1);
+    			if (detaching) detach_dev(t5);
+    			if (detaching) detach_dev(button);
+    			if (detaching) detach_dev(t7);
     			if (detaching) detach_dev(div0);
     			destroy_component(pancake_chart);
-    			if (detaching) detach_dev(t4);
+    			if (detaching) detach_dev(t8);
     			if (detaching) detach_dev(div1);
     			if (if_block0) if_block0.d();
     			if (if_block1) if_block1.d();
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -7382,23 +7443,23 @@ var app = (function () {
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(140:2) {:then projectInfo}",
+    		source: "(152:2) {:then projectInfo}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (153:10) {#if is_visible(node, selected)}
+    // (174:10) {#if is_visible(node, selected)}
     function create_if_block_2(ctx) {
     	let div1;
     	let div0;
     	let strong;
-    	let t0_value = /*node*/ ctx[11].data.name + "";
+    	let t0_value = /*node*/ ctx[17].data.name + "";
     	let t0;
     	let t1;
     	let span;
-    	let t2_value = commas(/*node*/ ctx[11].value) + "";
+    	let t2_value = commas(/*node*/ ctx[17].value) + "";
     	let t2;
     	let div1_transition;
     	let current;
@@ -7406,7 +7467,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler_1() {
-    		return /*click_handler_1*/ ctx[7](/*node*/ ctx[11]);
+    		return /*click_handler_1*/ ctx[12](/*node*/ ctx[17]);
     	}
 
     	const block = {
@@ -7419,14 +7480,14 @@ var app = (function () {
     			span = element("span");
     			t2 = text(t2_value);
     			attr_dev(strong, "class", "svelte-11gtj05");
-    			add_location(strong, file, 160, 16, 5352);
+    			add_location(strong, file, 181, 16, 6012);
     			attr_dev(span, "class", "svelte-11gtj05");
-    			add_location(span, file, 161, 16, 5402);
+    			add_location(span, file, 182, 16, 6062);
     			attr_dev(div0, "class", "contents svelte-11gtj05");
-    			add_location(div0, file, 159, 14, 5313);
+    			add_location(div0, file, 180, 14, 5973);
     			attr_dev(div1, "class", "node svelte-11gtj05");
-    			toggle_class(div1, "leaf", !/*node*/ ctx[11].children);
-    			add_location(div1, file, 153, 12, 5118);
+    			toggle_class(div1, "leaf", !/*node*/ ctx[17].children);
+    			add_location(div1, file, 174, 12, 5778);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -7445,11 +7506,11 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if ((!current || dirty & /*node*/ 2048) && t0_value !== (t0_value = /*node*/ ctx[11].data.name + "")) set_data_dev(t0, t0_value);
-    			if ((!current || dirty & /*node*/ 2048) && t2_value !== (t2_value = commas(/*node*/ ctx[11].value) + "")) set_data_dev(t2, t2_value);
+    			if ((!current || dirty & /*node*/ 131072) && t0_value !== (t0_value = /*node*/ ctx[17].data.name + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty & /*node*/ 131072) && t2_value !== (t2_value = commas(/*node*/ ctx[17].value) + "")) set_data_dev(t2, t2_value);
 
-    			if (dirty & /*node*/ 2048) {
-    				toggle_class(div1, "leaf", !/*node*/ ctx[11].children);
+    			if (dirty & /*node*/ 131072) {
+    				toggle_class(div1, "leaf", !/*node*/ ctx[17].children);
     			}
     		},
     		i: function intro(local) {
@@ -7479,16 +7540,16 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(153:10) {#if is_visible(node, selected)}",
+    		source: "(174:10) {#if is_visible(node, selected)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (152:8) <Treemap {root} let:node>
+    // (173:8) <Treemap {root} let:node>
     function create_default_slot_1(ctx) {
-    	let show_if = is_visible(/*node*/ ctx[11], /*selected*/ ctx[0]);
+    	let show_if = is_visible(/*node*/ ctx[17], /*selected*/ ctx[0]);
     	let if_block_anchor;
     	let current;
     	let if_block = show_if && create_if_block_2(ctx);
@@ -7504,13 +7565,13 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*node, selected*/ 2049) show_if = is_visible(/*node*/ ctx[11], /*selected*/ ctx[0]);
+    			if (dirty & /*node, selected*/ 131073) show_if = is_visible(/*node*/ ctx[17], /*selected*/ ctx[0]);
 
     			if (show_if) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty & /*node, selected*/ 2049) {
+    					if (dirty & /*node, selected*/ 131073) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -7548,26 +7609,26 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(152:8) <Treemap {root} let:node>",
+    		source: "(173:8) <Treemap {root} let:node>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (151:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>
+    // (172:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>
     function create_default_slot(ctx) {
     	let treemap_1;
     	let current;
 
     	treemap_1 = new Treemap({
     			props: {
-    				root: /*root*/ ctx[1],
+    				root: /*root*/ ctx[2],
     				$$slots: {
     					default: [
     						create_default_slot_1,
-    						({ node }) => ({ 11: node }),
-    						({ node }) => node ? 2048 : 0
+    						({ node }) => ({ 17: node }),
+    						({ node }) => node ? 131072 : 0
     					]
     				},
     				$$scope: { ctx }
@@ -7585,9 +7646,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const treemap_1_changes = {};
-    			if (dirty & /*root*/ 2) treemap_1_changes.root = /*root*/ ctx[1];
+    			if (dirty & /*root*/ 4) treemap_1_changes.root = /*root*/ ctx[2];
 
-    			if (dirty & /*$$scope, node, selected*/ 10241) {
+    			if (dirty & /*$$scope, node, selected*/ 655361) {
     				treemap_1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -7611,14 +7672,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(151:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>",
+    		source: "(172:6) <Pancake.Chart x1={$extents.x1} x2={$extents.x2} y1={$extents.y1} y2={$extents.y2}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (172:8) {#if selected.data.lines}
+    // (193:8) {#if selected.data.lines}
     function create_if_block_1(ctx) {
     	let li;
     	let t0;
@@ -7630,7 +7691,7 @@ var app = (function () {
     			li = element("li");
     			t0 = text("Lines: ");
     			t1 = text(t1_value);
-    			add_location(li, file, 172, 8, 5635);
+    			add_location(li, file, 193, 8, 6295);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -7649,14 +7710,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(172:8) {#if selected.data.lines}",
+    		source: "(193:8) {#if selected.data.lines}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (175:8) {#if selected.data.rating}
+    // (196:8) {#if selected.data.rating}
     function create_if_block(ctx) {
     	let li;
     	let t0;
@@ -7668,7 +7729,7 @@ var app = (function () {
     			li = element("li");
     			t0 = text("Rating: ");
     			t1 = text(t1_value);
-    			add_location(li, file, 175, 8, 5730);
+    			add_location(li, file, 196, 8, 6390);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -7687,14 +7748,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(175:8) {#if selected.data.rating}",
+    		source: "(196:8) {#if selected.data.rating}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (138:27)      <p>...waiting</p>   {:then projectInfo}
+    // (150:27)      <p>...waiting</p>   {:then projectInfo}
     function create_pending_block(ctx) {
     	let p;
 
@@ -7702,7 +7763,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file, 138, 4, 4580);
+    			add_location(p, file, 150, 4, 4941);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -7719,7 +7780,7 @@ var app = (function () {
     		block,
     		id: create_pending_block.name,
     		type: "pending",
-    		source: "(138:27)      <p>...waiting</p>   {:then projectInfo}",
+    		source: "(150:27)      <p>...waiting</p>   {:then projectInfo}",
     		ctx
     	});
 
@@ -7744,12 +7805,12 @@ var app = (function () {
     		pending: create_pending_block,
     		then: create_then_block,
     		catch: create_catch_block,
-    		value: 10,
-    		error: 12,
+    		value: 16,
+    		error: 18,
     		blocks: [,,,]
     	};
 
-    	handle_promise(/*getProjectData*/ ctx[5](), info);
+    	handle_promise(/*getProjectData*/ ctx[6](), info);
 
     	const block = {
     		c: function create() {
@@ -7767,7 +7828,7 @@ var app = (function () {
     			if (script1.src !== (script1_src_value = "https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit-icons.min.js")) attr_dev(script1, "src", script1_src_value);
     			add_location(script1, file, 4, 2, 223);
     			attr_dev(main, "class", "svelte-11gtj05");
-    			add_location(main, file, 136, 0, 4541);
+    			add_location(main, file, 148, 0, 4902);
     		},
     		l: function claim(nodes) {
     			throw new Error_1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7901,12 +7962,16 @@ var app = (function () {
     			});
     	};
 
+    	// export let name: string;
+    	let dimension = "lines";
+
     	const treemap = index();
     	const extents = tweened(undefined, { easing: cubicOut, duration: 600 });
     	validate_store(extents, "extents");
-    	component_subscribe($$self, extents, value => $$invalidate(2, $extents = value));
+    	component_subscribe($$self, extents, value => $$invalidate(3, $extents = value));
     	let selected = undefined;
     	let root = undefined;
+    	const hierarchyData = { name: "" };
     	
     	
 
@@ -7926,12 +7991,11 @@ var app = (function () {
 
     	function getProjectData() {
     		return __awaiter(this, void 0, void 0, function* () {
+    			console.log("getProjectData", dimension);
     			const res = yield fetch(`http://localhost:8000/files`);
     			const json = yield res.json();
 
     			if (res.ok) {
-    				const hierarchyData = { name: "" };
-
     				json.files.forEach(f => {
     					let path = f.directory ? f.directory.split("/") : [];
 
@@ -7967,7 +8031,7 @@ var app = (function () {
 
     				flattenData(hierarchyData);
     				const hierarchy$1 = hierarchy(hierarchyData).sum(d => d.lines).sort((a, b) => b.lines - a.lines);
-    				$$invalidate(1, root = treemap(hierarchy$1));
+    				$$invalidate(2, root = treemap(hierarchy$1));
     				$$invalidate(0, selected = root);
     				return json;
     			} else {
@@ -7976,17 +8040,41 @@ var app = (function () {
     		});
     	}
 
+    	function onChangeDimension(event) {
+    		const val = event.currentTarget.value;
+    		console.log("ASDASDASD", val, dimension);
+
+    		// getProjectData();
+    		const hierarchy$1 = hierarchy(hierarchyData).sum(d => d[val]).sort((a, b) => b[val] - a[val]);
+
+    		$$invalidate(2, root = treemap(hierarchy$1));
+    		$$invalidate(0, selected = root);
+    	}
+
     	const writable_props = [];
 
     	Object_1.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
+    	const $$binding_groups = [[]];
+
+    	function input0_change_handler() {
+    		dimension = this.__value;
+    		$$invalidate(1, dimension);
+    	}
+
+    	function input1_change_handler() {
+    		dimension = this.__value;
+    		$$invalidate(1, dimension);
+    	}
+
     	const click_handler = () => $$invalidate(0, selected = selected.parent);
     	const click_handler_1 = node => select(node);
 
     	$$self.$capture_state = () => ({
     		__awaiter,
+    		dimension,
     		Pancake,
     		d3,
     		tweened,
@@ -7999,18 +8087,21 @@ var app = (function () {
     		extents,
     		selected,
     		root,
+    		hierarchyData,
     		breadcrumbs,
     		is_visible,
     		select,
     		flattenData,
     		getProjectData,
+    		onChangeDimension,
     		$extents
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("__awaiter" in $$props) __awaiter = $$props.__awaiter;
+    		if ("dimension" in $$props) $$invalidate(1, dimension = $$props.dimension);
     		if ("selected" in $$props) $$invalidate(0, selected = $$props.selected);
-    		if ("root" in $$props) $$invalidate(1, root = $$props.root);
+    		if ("root" in $$props) $$invalidate(2, root = $$props.root);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -8034,11 +8125,16 @@ var app = (function () {
 
     	return [
     		selected,
+    		dimension,
     		root,
     		$extents,
     		extents,
     		select,
     		getProjectData,
+    		onChangeDimension,
+    		input0_change_handler,
+    		$$binding_groups,
+    		input1_change_handler,
     		click_handler,
     		click_handler_1
     	];
