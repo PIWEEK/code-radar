@@ -94,7 +94,7 @@
 	.chart {
     float: left;
 		width: calc(80% + 2px);
-		height: 400px;
+		/* height: 400px; */
 		padding: 0;
 		margin: 0 -1px 36px -1px;
 		overflow: hidden;

@@ -8,6 +8,7 @@
 
   const hierarchyData = {
     name: ".",
+    lines: 33,
     children: {}
   };
 
@@ -21,9 +22,13 @@
 
     const name = d => d.ancestors().reverse().map(d => d.data.name).join("/")
     const color = d3.scaleLinear()
-    .domain([0, 1])
-    .range(["#e1eec3", "#f05053"]);
+      .domain([0, 1])
+      .range(["#e1eec3", "#f05053"]);
 
+
+    const dataScale = d3.scaleLinear()
+        .domain([d3.min(data.files, function(d){return d.lines}), d3.max(data.files, function(d){return d.lines})])
+        .range([1,10]);
 
     data.files.forEach((f) => {
       let path = f.directory  ? f.directory.split("/") : [];
@@ -59,11 +64,12 @@
     });
 
     flattenData(hierarchyData);
+    hierarchyData.lines = d3.sum(hierarchyData.children, d => d.lines);
 
     console.log("hierarchyData", hierarchyData)
 
     function tile(node, x0, y0, x1, y1) {
-      d3.treemapResquarify(node, 0, 0, width, height);
+      d3.treemapBinary(node, 0, 0, width, height);
       for (const child of node.children) {
         child.x0 = x0 + child.x0 / width * (x1 - x0);
         child.x1 = x0 + child.x1 / width * (x1 - x0);
@@ -75,7 +81,7 @@
     const treemap = data => d3.treemap()
         .tile(tile)
       (d3.hierarchy(hierarchyData)
-        .sum(d => d.value)
+        .sum(d => dataScale(d.lines))
         .sort((a, b) => b.value - a.value));
 
     const x = d3.scaleLinear().rangeRound([0, width]);
@@ -84,6 +90,9 @@
     const svg = d3.select(el)
         .attr("viewBox", [0.5, -30.5, width, height + 30])
         .style("font", "8px sans-serif");
+
+
+    console.log(Object.keys(treemap(hierarchyData)))
 
     let group = svg.append("g")
         .call(render, treemap(hierarchyData));
@@ -116,7 +125,7 @@
           });
 
       node.append("title")
-          .text(d => `${name(d)}\n${format(d.value)}`);
+          .text(d => `${name(d)}\n${format(d.data.lines)}`);
 
       node.append("rect")
           // .attr("id", d => d.leafUid = uuidv4())
@@ -132,7 +141,7 @@
           .attr("clip-path", d => d.clipUid)
           .attr("font-weight", d => d === root ? "bold" : null)
           .selectAll("tspan")
-          .data(d => (d === root ? name(d) : d.data.name).split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
+          .data(d => (d === root ? name(d) : d.data.name).split(/(?=[A-Z][^A-Z])/g).concat(format(d.data.lines)))
           .join("tspan")
           .attr("x", 3)
           .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
