@@ -10,9 +10,18 @@
     children: {}
   };
 
+  // function uuidv4() {
+  //   const ret = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  //     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+  //     return v.toString(16);
+  //   });
+  //   console.log(ret);
+  //   return ret;
+  // }
+
 	onMount(async () => {
-    const width = 400;
-    const height = 200;
+    const width = 954;
+    const height = 924;
 
     const format = d3.format(",d");
 
@@ -72,7 +81,7 @@
 
     const svg = d3.select(el)
         .attr("viewBox", [0.5, -30.5, width, height + 30])
-        .style("font", "4px sans-serif");
+        .style("font", "8px sans-serif");
 
     let group = svg.append("g")
         .call(render, treemap(hierarchyData));
@@ -91,18 +100,12 @@
           .text(d => `${name(d)}\n${format(d.value)}`);
 
       node.append("rect")
-          // .attr("id", d => uuidv4())
-          // .attr("fill", d => d === root ? "#fff" : d.children ? "#ccc" : "#ddd")
-          .attr("fill", d => {
-            while (d.depth > 1) {
-              d = d.parent;
-            }
-            return color(d.data.rating);
-          })
+          // .attr("id", d => d.leafUid = uuidv4())
+          .attr("fill", d => d === root ? "#fff" : color(d.data.rating))
           .attr("stroke", "#fff");
 
       node.append("clipPath")
-        // .attr("id", d => uuidv4())
+        // .attr("id", d => d.clipUid = uuidv4())
         .append("use")
         // .attr("xlink:href", d => d.leafUid.href);
 
