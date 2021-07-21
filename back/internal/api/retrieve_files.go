@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"path/filepath"
-	"fmt"
 	"time"
 
 	"github.com/piweek/code-radar/internal/db"
@@ -14,6 +13,9 @@ import (
 type RetrieveFilesResponse struct {
 	Name string `json:"name"`
 	Url string `json:"url"`
+	FirstCommit string `json:"firstCommit"`
+	LastCommit string `json:"lastCommit"`
+	Users []string `json:"users"`
 	Files []RetrieveFilesResponseFile `json:"files"`
 }
 
@@ -24,9 +26,16 @@ type RetrieveFilesResponseFile struct {
 	Lines int `json:"lines"`
 	Rating float32 `json:"rating"`
 	IsDirectory bool `json:"isDirectory"`
-	History []string `json:"history"`
+	History []RetrieveFilesResponseHistoryEntry `json:"history"`
+	Owners map[string]interface{} `json:"owners"`
 }
 
+type RetrieveFilesResponseHistoryEntry struct {
+	User string `json:user`
+	Added int `json:added`
+	Deleted int `json:deleted`
+	Date string `json:date`
+}
 
 func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -52,15 +61,20 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 			extension = filepath.Ext(file.Name)
 		}
 
-		var history []string
+		var history []RetrieveFilesResponseHistoryEntry
 
 		for _, h := range file.History {
-			history = append(history, fmt.Sprintf("[%s]%s: +%d -%d",
-				h.Date.Format(time.RFC3339),
-				h.User,
-				h.Added,
-				h.Deleted,
-			))
+			history = append(history, RetrieveFilesResponseHistoryEntry {
+				User: h.User,
+				Added: h.Added,
+				Deleted: h.Deleted,
+				Date: h.Date.Format(time.RFC3339),
+			})
+		}
+
+		owners := make(map[string]interface{})
+		for k, v := range file.Owners {
+			owners[k] = v
 		}
 
 		responseFiles = append(responseFiles, RetrieveFilesResponseFile {
@@ -71,12 +85,16 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 			Rating: file.Rating,
 			IsDirectory: isDir,
 			History: history,
+			Owners: owners,
 		})
 	}
 
 	result := &RetrieveFilesResponse {
 		Name: global.GetInfo().Name,
 		Url: global.GetInfo().Url,
+		FirstCommit: global.GetInfo().FirstCommit.Format(time.RFC3339),
+		LastCommit: global.GetInfo().LastCommit.Format(time.RFC3339),
+		Users: global.GetInfo().Users,
 		Files: responseFiles,
 	}
 

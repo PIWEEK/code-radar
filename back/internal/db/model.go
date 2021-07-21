@@ -20,6 +20,7 @@ type FileDB struct {
 	Lines int
 	Rating float32
 	History []FileHistory
+	Owners map[string]float32
 }
 
 func (file *FileDB) Copy() *FileDB {
@@ -30,6 +31,12 @@ func (file *FileDB) Copy() *FileDB {
 	// Copy history elements
 	for i, h := range file.History {
 		newFile.History[i] = h
+	}
+
+	newFile.Owners = make(map[string]float32)
+
+	for k, v := range file.Owners {
+		newFile.Owners[k] = v
 	}
 
 	return &newFile

@@ -13,7 +13,9 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/go-git/go-git/v5/utils/merkletrie"
+
 	"github.com/piweek/code-radar/internal/db"
+	"github.com/piweek/code-radar/internal/global"
 )
 
 func InitLocalRepository(url string) *git.Repository {
@@ -113,6 +115,25 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 	return nil
 }
 
+func CalculateOwners(file *db.FileDB) map[string]float32 {
+	var totalChanges float32 = 0
+	owners := make(map[string]float32)
+
+	for _, h := range file.History {
+		v := float32(h.Added + h.Deleted)
+		totalChanges += v
+		owners[h.User] += v
+	}
+
+	if totalChanges != 0 {
+		for k, v := range owners {
+			owners[k] = v / totalChanges
+		}
+	}
+
+	return owners
+}
+
 func ProcessFiles() error {
 	files, _ := db.ListAllFiles()
 
@@ -137,6 +158,7 @@ func ProcessFiles() error {
 
 		newFile := file.Copy()
 		newFile.Rating = rating
+		newFile.Owners = CalculateOwners(file)
 
 		err := db.SaveFile(newFile)
 
@@ -163,6 +185,7 @@ func ProcessFolders() error {
 
 		var rating float32 = 0.0
 
+		// Keep the max rating of the children
 		for _, file := range files {
 			if file.Rating > rating {
 				rating = file.Rating
@@ -171,6 +194,7 @@ func ProcessFolders() error {
 
 		newDir := dir.Copy()
 		newDir.Rating = rating
+		newDir.Owners = CalculateOwners(dir)
 
 		err := db.SaveFile(newDir)
 
@@ -184,6 +208,15 @@ func ProcessFolders() error {
 
 func ProcessRepository(repo *git.Repository) error {
 	var err error
+
+	remote, _ := repo.Remote("origin")
+	remoteUrl := remote.Config().URLs[0]
+
+	parts := strings.Split(remoteUrl, "/")
+	remoteName := parts[len(parts) - 1]
+	remoteName = strings.ReplaceAll(remoteName, ".git", "")
+
+	global.InitInfo(remoteName, remoteUrl)
 
 	ref, err := repo.Head()
 
@@ -205,9 +238,15 @@ func ProcessRepository(repo *git.Repository) error {
 	var commits [](*object.Commit)
 
 	err = commitIt.ForEach(func (c *object.Commit) error {
+		global.AddUser(c.Author.Email)
 		commits = append(commits, c)
 		return nil
 	})
+
+	first := commits[0].Author.When
+	last := commits[len(commits) - 1].Author.When
+
+	global.SetCommitRange(first, last)
 
 	db.StartTransaction()
 

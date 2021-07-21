@@ -7,7 +7,6 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/piweek/code-radar/internal/api"
 	"github.com/piweek/code-radar/internal/db"
-	"github.com/piweek/code-radar/internal/global"
 	"github.com/piweek/code-radar/internal/parser"
 )
 
@@ -19,23 +18,19 @@ func main() {
 
 	args := flag.Args()
 
-	if (len (args) != 1 && len (args) != 2) {
-		log.Fatal("coderadar [--local] <name> [<url>]")
+	if len(args) != 0 && len(args) != 1 {
+		log.Fatal("coderadar [--local] [<url|path>]")
 	}
-
-	name := args[0]
 
 	var url string
 
-	if len(args) == 2 {
-		url  = args[1]
+	if len(args) == 1 {
+		url  = args[0]
 	} else {
 		tmp := true
 		isLocal = &tmp
 		url = "."
 	}
-
-	global.InitInfo(name, url)
 
 	err = db.InitializeDB()
 
