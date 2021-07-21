@@ -94,7 +94,8 @@
         .data(root.children.concat(root))
         .join("g");
 
-      node.attr("cursor", "pointer")
+      node.filter(d => d === root ? d.parent : d)
+          .attr("cursor", "pointer")
           .on("click", (event, d) => {
             console.log(d.data)
             if (d === root) {
@@ -113,8 +114,6 @@
               }
             }
           });
-
-
 
       node.append("title")
           .text(d => `${name(d)}\n${format(d.value)}`);
