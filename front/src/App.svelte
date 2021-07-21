@@ -45,7 +45,7 @@
       <ul>
         {#if selected?.name != undefined}
         <li>Name: {selected?.name}</li>
-        {/if}      
+        {/if}
         {#if selected?.lines != undefined}
         <li>Lines: {selected?.lines}</li>
         {/if}
@@ -55,15 +55,16 @@
       </ul>
     </div>
 
-<!--
+    {#if selected?.history}
     <ul class="uk-list uk-list-striped">
-      {#each projectInfo.files as file, i}
+      {#each selected.history as history, i}
         <li>
-          {file.name}
+          {history}
         </li>
       {/each}
     </ul>
--->
+    {/if}
+
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
@@ -161,7 +162,7 @@
 		line-height: 1;
 	} */
 
-  /* .uk-list {
+  .uk-list {
     clear: both;
-  } */
+  }
 </style>
