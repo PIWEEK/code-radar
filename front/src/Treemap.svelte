@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+	import { createEventDispatcher } from 'svelte';
 
   export let data;
   let el;
@@ -10,14 +11,7 @@
     children: {}
   };
 
-  // function uuidv4() {
-  //   const ret = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-  //     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-  //     return v.toString(16);
-  //   });
-  //   console.log(ret);
-  //   return ret;
-  // }
+	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
     const width = 954;
@@ -50,9 +44,14 @@
 
       if (!f.isDirectory) {
         d.children[f.name] = {
-          lines: f.lines,
-          rating: f.rating
+          value: f.lines,
+          ...f
         };
+      }
+      else {
+        Object.keys(f).forEach(key => {
+          d[key] = f[key];
+        })
       }
     });
 
@@ -73,8 +72,8 @@
     const treemap = data => d3.treemap()
         .tile(tile)
       (d3.hierarchy(hierarchyData)
-        .sum(d => d.lines)
-        .sort((a, b) => b.lines - a.lines));
+        .sum(d => d.value)
+        .sort((a, b) => b.value - a.value));
 
     const x = d3.scaleLinear().rangeRound([0, width]);
     const y = d3.scaleLinear().rangeRound([0, height]);
@@ -92,9 +91,27 @@
         .data(root.children.concat(root))
         .join("g");
 
-      node.filter(d => d === root ? d.parent : d.children)
-          .attr("cursor", "pointer")
-          .on("click", (event, d) => d === root ? zoomout(root) : zoomin(d));
+      node.attr("cursor", "pointer")
+          .on("click", (event, d) => {
+            console.log(d.data)
+            if (d === root) {
+              console.log("zoomout", d)
+              dispatch('fileSelected', {
+                file: d.parent.data
+              });
+              zoomout(root);
+            }
+            else {
+              dispatch('fileSelected', {
+                file: d.data
+              });
+              if (d.data.isDirectory) {
+                zoomin(d);
+              }
+            }
+          });
+
+
 
       node.append("title")
           .text(d => `${name(d)}\n${format(d.value)}`);

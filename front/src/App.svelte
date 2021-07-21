@@ -9,6 +9,8 @@
 <script lang="ts">
 	import Treemap from './Treemap.svelte';
 
+  let selected = undefined;
+
 	async function getProjectData() {
 		const res = await fetch(`http://localhost:8000/files`);
 		const json = await res.json();
@@ -19,6 +21,11 @@
 			throw new Error(json);
 		}
 	}
+
+  function handleFileSelected(file) {
+    console.log("handleFileSelected", file.detail.file)
+    selected = file.detail.file;
+  }
 </script>
 
 <main>
@@ -31,21 +38,22 @@
     </h1>
 
     <div class="chart">
-      <Treemap data={projectInfo}/>
+      <Treemap data={projectInfo} on:fileSelected={handleFileSelected}/>/>
     </div>
 
-<!--
     <div class="analytics">
       <ul>
-        {#if selected.data.lines != undefined}
-        <li>Lines: {selected.data.lines}</li>
+        {#if selected?.name != undefined}
+        <li>Name: {selected?.name}</li>
+        {/if}      
+        {#if selected?.lines != undefined}
+        <li>Lines: {selected?.lines}</li>
         {/if}
-        {#if selected.data.rating != undefined}
-        <li>Rating: {selected.data.rating}</li>
+        {#if selected?.rating != undefined}
+        <li>Rating: {selected?.rating}</li>
         {/if}
       </ul>
     </div>
--->
 
 <!--
     <ul class="uk-list uk-list-striped">
@@ -94,6 +102,12 @@
 		overflow: hidden;
 	}
 
+  .analytics {
+    width: calc(20% - 2px);
+		height: 400px;
+    float: right;
+  }
+
 /* 
   .breadcrumbs {
 		width: 100%;
@@ -111,12 +125,6 @@
 		cursor: default;
 	}
 
-
-  .analytics {
-    width: calc(20% - 2px);
-		height: 400px;
-    float: right;
-  }
 
 	.node {
 		position: absolute;
