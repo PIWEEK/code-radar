@@ -25,18 +25,17 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 		ctx := context.Background()
 		changes, err := object.DiffTreeWithOptions(ctx, prevTree, commitTree, options)
 
+		if err != nil {
+			return err
+		}
+
 		statsMap := make(map[string]object.FileStat)
 
 		patch, _ := changes.Patch()
-
 		stats := patch.Stats()
 
 		for _, stat := range stats {
 			statsMap[stat.Name] = stat
-		}
-
-		if err != nil {
-			return err
 		}
 
 		user := commit.Author.Email
@@ -61,8 +60,10 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 							return err
 						}
 				  }
-				  
-				  err = db.UpdateFile(name, false, fileStat.Addition, fileStat.Deletion, user, date)
+
+  				if (fileStat.Addition != 0 || fileStat.Deletion != 0) {
+  				  err = db.UpdateFile(name, false, fileStat.Addition, fileStat.Deletion, user, date)
+  				}
 			  	
 			  case merkletrie.Delete:
 				  err = db.DeleteFile(name, user, date)
@@ -104,6 +105,7 @@ func ProcessRepository(url string) error {
 
 	commitIt, err := repo.Log(&git.LogOptions{
 		From: ref.Hash(),
+		Order: git.LogOrderCommitterTime,
 	})
 
 	if err != nil {

@@ -46,6 +46,7 @@ func UpdateFile(path string, dir bool, linesAdd int, linesDelete int, user strin
 				},
 			},
 		}
+		err = txn.Insert("files", filedb)
 	} else {
 		// Create a copy
 		filedb = file.copy()
@@ -57,12 +58,12 @@ func UpdateFile(path string, dir bool, linesAdd int, linesDelete int, user strin
 			Deleted: linesDelete,
 			Date: date,
 		})
-	}
 
-	if (filedb.Dir && filedb.Lines == 0) {
-		err = txn.Delete("files", filedb)
-	} else {
-		err = txn.Insert("files", filedb)
+		if (filedb.Dir && filedb.Lines == 0) {
+			err = txn.Delete("files", filedb)
+		} else {
+			err = txn.Insert("files", filedb)
+		}
 	}
 
 	return err
@@ -71,7 +72,7 @@ func UpdateFile(path string, dir bool, linesAdd int, linesDelete int, user strin
 func MoveFile(path string, newPath string, user string, date time.Time) error {
 	file, err := GetFile(path)
 
-	if file != nil && err != nil {
+	if file != nil && err == nil {
 		if (file.Parent != "") {
 			// Remove lines from parent
 			err = UpdateFile(file.Parent, true, 0, file.Lines, user, date)
