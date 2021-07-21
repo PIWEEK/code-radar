@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	"os"
+	"flag"
 
+	"github.com/go-git/go-git/v5"
 	"github.com/piweek/code-radar/internal/api"
 	"github.com/piweek/code-radar/internal/db"
 	"github.com/piweek/code-radar/internal/global"
@@ -13,16 +14,25 @@ import (
 func main() {
 	var err error
 
-	if (len (os.Args) != 2 && len (os.Args) != 3) {
-		log.Fatal("coderadar <name> [<url>]")
+	isLocal := flag.Bool("local", false, "the url refers to a local repository path")
+	flag.Parse()
+
+	args := flag.Args()
+
+	if (len (args) != 1 && len (args) != 2) {
+		log.Fatal("coderadar [--local] <name> [<url>]")
 	}
 
-	name := os.Args[1]
+	name := args[0]
 
 	var url string
 
-	if len(os.Args) == 3 {
-		url  = os.Args[2]
+	if len(args) == 2 {
+		url  = args[1]
+	} else {
+		tmp := true
+		isLocal = &tmp
+		url = "."
 	}
 
 	global.InitInfo(name, url)
@@ -32,8 +42,16 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	var repo *git.Repository
+
+	if *isLocal {
+		repo = parser.InitLocalRepository(url)
+	} else {
+		repo = parser.InitRemoteRepository(url)
+	}
 	
-	err = parser.ProcessRepository(url)
+	err = parser.ProcessRepository(repo)
 
 	if err != nil {
 		panic(err)

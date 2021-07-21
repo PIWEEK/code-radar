@@ -78,24 +78,33 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 	return nil
 }
 
-func ProcessRepository(url string) error {
-	var repo *git.Repository
-	var err error
-
-	if (url == "") {
-		log.Println("Using current directory")
-		repo, err = git.PlainOpenWithOptions(".", &git.PlainOpenOptions{DetectDotGit: true})
-	} else {
-		log.Println("Cloning ", url)
-		repo, err = git.Clone(memory.NewStorage(), nil, &git.CloneOptions {
-			URL: url,
-			Progress: os.Stdout,
-		})
-	}
+func InitLocalRepository(url string) *git.Repository {
+	log.Println("Init local repository", url)
+	repo, err := git.PlainOpenWithOptions(url, &git.PlainOpenOptions{DetectDotGit: true})
 
 	if err != nil {
-		return err
+		panic(err)
 	}
+
+	return repo
+}
+
+func InitRemoteRepository(url string) *git.Repository {
+	log.Println("Init remote repository", url)
+	repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions {
+		URL: url,
+		Progress: os.Stdout,
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	return repo
+}
+
+func ProcessRepository(repo *git.Repository) error {
+	var err error
 
 	ref, err := repo.Head()
 
