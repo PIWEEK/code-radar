@@ -49,7 +49,7 @@ func UpdateFile(path string, dir bool, linesAdd int, linesDelete int, user strin
 		err = txn.Insert("files", filedb)
 	} else {
 		// Create a copy
-		filedb = file.copy()
+		filedb = file.Copy()
 		filedb.Lines += linesAdd
 		filedb.Lines -= linesDelete
 		filedb.History = append(filedb.History, FileHistory{
@@ -88,12 +88,16 @@ func MoveFile(path string, newPath string, user string, date time.Time) error {
 			err = UpdateFile(newParent, true, file.Lines, 0, user, date)
 		}
 
+		if err != nil {
+			return err
+		}
+
 		// copy the file
-		newFile := file.copy()
+		newFile := file.Copy()
 		newFile.Path = newPath
 		newFile.Parent = newParent
 
-		txn.Insert("files", newFile)
+		err = txn.Insert("files", newFile)
 	}
 
 	return err
@@ -115,4 +119,8 @@ func DeleteFile(path string, user string, date time.Time) error {
 	}
 
 	return err
+}
+
+func SaveFile(file *FileDB) error {
+	return txn.Insert("files", file)
 }

@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"context"
+	"math"
+	"sort"
+	"strings"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -12,6 +15,31 @@ import (
 	"github.com/go-git/go-git/v5/utils/merkletrie"
 	"github.com/piweek/code-radar/internal/db"
 )
+
+func InitLocalRepository(url string) *git.Repository {
+	log.Println("Init local repository", url)
+	repo, err := git.PlainOpenWithOptions(url, &git.PlainOpenOptions{DetectDotGit: true})
+
+	if err != nil {
+		panic(err)
+	}
+
+	return repo
+}
+
+func InitRemoteRepository(url string) *git.Repository {
+	log.Println("Init remote repository", url)
+	repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions {
+		URL: url,
+		Progress: os.Stdout,
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	return repo
+}
 
 func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 	var prevTree *object.Tree
@@ -85,29 +113,73 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 	return nil
 }
 
-func InitLocalRepository(url string) *git.Repository {
-	log.Println("Init local repository", url)
-	repo, err := git.PlainOpenWithOptions(url, &git.PlainOpenOptions{DetectDotGit: true})
+func ProcessFiles() error {
+	files, _ := db.ListAllFiles()
 
-	if err != nil {
-		panic(err)
+	min := math.MaxInt32
+	max := math.MinInt32
+
+	for _, file := range files {
+		var chgs = len(file.History)
+
+		if chgs < min {
+			min = chgs
+		}
+
+		if chgs > max {
+			max = chgs
+		}
 	}
 
-	return repo
+	for _, file := range files {
+		var v = len(file.History)
+		rating := float32(v - min) / float32(max - min)
+
+		newFile := file.Copy()
+		newFile.Rating = rating
+
+		err := db.SaveFile(newFile)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
-func InitRemoteRepository(url string) *git.Repository {
-	log.Println("Init remote repository", url)
-	repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions {
-		URL: url,
-		Progress: os.Stdout,
+func ProcessFolders() error {
+	dirs, _ := db.ListAllDirectories()
+
+	// We sort by length of the path so we know every children
+	// has been processed before the current
+	sort.Slice(dirs, func(i, j int) bool {
+    return len(strings.Split(dirs[i].Path, "/")) >
+			len(strings.Split(dirs[j].Path, "/"))
 	})
 
-	if err != nil {
-		panic(err)
+	for _, dir := range dirs {
+		files, _ := db.ListFolderFiles(dir.Path)
+
+		var rating float32 = 0.0
+
+		for _, file := range files {
+			if file.Rating > rating {
+				rating = file.Rating
+			}
+		}
+
+		newDir := dir.Copy()
+		newDir.Rating = rating
+
+		err := db.SaveFile(newDir)
+
+		if err != nil {
+			return err
+		}
 	}
 
-	return repo
+	return nil
 }
 
 func ProcessRepository(repo *git.Repository) error {
@@ -153,6 +225,12 @@ func ProcessRepository(repo *git.Repository) error {
 		if err != nil {
 			break;
 		}
+	}
+
+	err = ProcessFiles()
+
+	if err == nil {
+		err = ProcessFolders()
 	}
 	
 	if err == nil {

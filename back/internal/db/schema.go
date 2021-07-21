@@ -20,6 +20,17 @@ func CreateSchema() *memdb.DBSchema {
 						Unique:  false,
 						Indexer: &memdb.StringFieldIndex{Field: "Path"},
 					},
+					"parent": &memdb.IndexSchema{
+						Name:    "parent",
+						Unique:  false,
+						AllowMissing: true,
+						Indexer: &memdb.StringFieldIndex{Field: "Parent"},
+					},
+					"dir": &memdb.IndexSchema{
+						Name:    "dir",
+						Unique:  false,
+						Indexer: &memdb.BoolFieldIndex{Field: "Dir"},
+					},
 				},
 			},
 		},

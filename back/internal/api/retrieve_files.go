@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"path/filepath"
-	"math/rand"
 	"fmt"
 	"time"
 
@@ -33,7 +32,7 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var responseFiles []RetrieveFilesResponseFile
 
-	files, err := db.ListFiles()
+	files, err := db.All()
 
 	if err != nil {
 		panic(err)
@@ -69,7 +68,7 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 			Directory: directory,
 			Extension: extension,
 			Lines: file.Lines,
-			Rating: rand.Float32(),
+			Rating: file.Rating,
 			IsDirectory: isDir,
 			History: history,
 		})

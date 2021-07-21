@@ -18,10 +18,11 @@ type FileDB struct {
 	Parent string
 	Name string
 	Lines int
+	Rating float32
 	History []FileHistory
 }
 
-func (file *FileDB) copy() *FileDB {
+func (file *FileDB) Copy() *FileDB {
 	var newFile FileDB
 	newFile = (*file)
 	newFile.History = make([]FileHistory, len(newFile.History))

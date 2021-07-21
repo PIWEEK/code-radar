@@ -1,5 +1,11 @@
 package db
 
+import (
+	"github.com/hashicorp/go-memdb"
+)
+
+type FileList = [](*FileDB)
+
 func GetFile(path string) (*FileDB, error) {
 	raw, err := txn.First("files", "path", path)
 
@@ -14,7 +20,16 @@ func GetFile(path string) (*FileDB, error) {
 	return raw.(*FileDB), nil
 }
 
-func ListFiles() ([](*FileDB), error) {
+func ProcessResult(it memdb.ResultIterator) FileList {
+	var result [](*FileDB)
+	for obj := it.Next(); obj != nil; obj = it.Next() {
+		p := obj.(*FileDB)
+		result = append(result, p)
+	}
+	return result
+}
+
+func All() (FileList, error) {
 	txn := db.Txn(false)
 
 	it, err := txn.Get("files", "path")
@@ -23,12 +38,35 @@ func ListFiles() ([](*FileDB), error) {
 		return nil, err
 	}
 
-	var result [](*FileDB)
-	for obj := it.Next(); obj != nil; obj = it.Next() {
-		p := obj.(*FileDB)
-		result = append(result, p)
-	}
-
-	return result, nil
+	return ProcessResult(it), nil
 }
 
+func ListAllFiles() (FileList, error) {
+	it, err := txn.Get("files", "dir", false)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ProcessResult(it), nil
+}
+
+func ListAllDirectories() (FileList, error) {
+	it, err := txn.Get("files", "dir", true)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ProcessResult(it), nil
+}
+
+func ListFolderFiles(parent string) (FileList, error) {
+	it, err := txn.Get("files", "parent", parent)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ProcessResult(it), nil
+}
