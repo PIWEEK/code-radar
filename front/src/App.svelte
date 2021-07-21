@@ -7,8 +7,9 @@
 
 
 <script lang="ts">
-	import Treemap from './Treemap.svelte';
-
+  import Treemap from './Treemap.svelte';
+  import Detail from './Detail.svelte';
+ 
   let selected = undefined;
 
 	async function getProjectData() {
@@ -42,17 +43,13 @@
     </div>
 
     <div class="analytics">
-      <ul>
-        {#if selected?.name != undefined}
-        <li>Name: {selected?.name}</li>
-        {/if}
-        {#if selected?.lines != undefined}
-        <li>Lines: {selected?.lines}</li>
-        {/if}
-        {#if selected?.rating != undefined}
-        <li>Rating: {selected?.rating}</li>
-        {/if}
-      </ul>
+      {#if selected}
+        <Detail file={selected}/>
+
+
+
+      {/if}
+
     </div>
 
     {#if selected?.history}
