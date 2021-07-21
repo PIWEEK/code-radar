@@ -20,7 +20,10 @@
     const format = d3.format(",d");
 
     const name = d => d.ancestors().reverse().map(d => d.data.name).join("/")
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    const color = d3.scaleLinear()
+    .domain([0, 1])
+    .range(["#e1eec3", "#f05053"]);
+
 
     data.files.forEach((f) => {
       let path = f.directory  ? f.directory.split("/") : [];
