@@ -82,7 +82,7 @@ func MoveFile(path string, newPath string, user string, date time.Time) error {
 			}
 		}
 
-		newParent := filepath.Dir(path)
+		newParent := filepath.Dir(newPath)
 
 		if newParent != "." {
 			err = UpdateFile(newParent, true, file.Lines, 0, user, date)
@@ -102,9 +102,9 @@ func MoveFile(path string, newPath string, user string, date time.Time) error {
 func DeleteFile(path string, user string, date time.Time) error {
 	file, err := GetFile(path)
 
-	if file != nil && err != nil {
+	if file != nil && err == nil {
 		if (file.Parent != "") {
-			err = UpdateFile(file.Parent, true, file.Lines, 0, user, date)
+			err = UpdateFile(file.Parent, true, 0, file.Lines, user, date)
 
 			if err != nil {
 				return err

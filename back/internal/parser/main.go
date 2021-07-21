@@ -14,65 +14,72 @@ import (
 )
 
 func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
+	var prevTree *object.Tree
+
+	// If the previous commit is empty we compare with the empty tree
 	if (previous != nil) {
-		options := &object.DiffTreeOptions {
-			DetectRenames: true,
-		}
+		prevTree, _ = previous.Tree()
+	} else {
+		prevTree = &object.Tree{}
+	}
 
-		commitTree, _ := commit.Tree()
-		prevTree, _ := previous.Tree()
+	options := &object.DiffTreeOptions {
+		DetectRenames: true,
+	}
 
-		ctx := context.Background()
-		changes, err := object.DiffTreeWithOptions(ctx, prevTree, commitTree, options)
+	commitTree, _ := commit.Tree()
 
-		if err != nil {
-			return err
-		}
+	ctx := context.Background()
+	changes, err := object.DiffTreeWithOptions(ctx, prevTree, commitTree, options)
 
-		statsMap := make(map[string]object.FileStat)
+	if err != nil {
+		return err
+	}
 
-		patch, _ := changes.Patch()
-		stats := patch.Stats()
+	statsMap := make(map[string]object.FileStat)
 
-		for _, stat := range stats {
-			statsMap[stat.Name] = stat
-		}
+	patch, _ := changes.Patch()
+	stats := patch.Stats()
 
-		user := commit.Author.Email
-		date := commit.Author.When
+	for _, stat := range stats {
+		statsMap[stat.Name] = stat
+	}
 
-		for _, change := range changes {
-			name := change.To.Name
-			action, _ := change.Action()
-			fileStat := statsMap[name]
+	user := commit.Author.Email
+	date := commit.Author.When
 
-			switch action {
-			  case merkletrie.Insert:
-				  err = db.UpdateFile(name, false, fileStat.Addition, 0, user, date)
-			  	
-			  case merkletrie.Modify:
-			  	nameFrom := change.From.Name
+	for _, change := range changes {
+		action, _ := change.Action()
+		name := change.To.Name
+		fileStat := statsMap[name]
 
-				  if nameFrom != name {
-				  	err = db.MoveFile(nameFrom, name, user, date)
+		switch action {
+		  case merkletrie.Insert:
+		  	err = db.UpdateFile(name, false, fileStat.Addition, 0, user, date)
 
-						if err != nil {
-							return err
-						}
-				  }
+		  case merkletrie.Modify:
+		  	nameFrom := change.From.Name
 
-  				if (fileStat.Addition != 0 || fileStat.Deletion != 0) {
-  				  err = db.UpdateFile(name, false, fileStat.Addition, fileStat.Deletion, user, date)
-  				}
-			  	
-			  case merkletrie.Delete:
-				  err = db.DeleteFile(name, user, date)
-			}
+		  	if nameFrom != name {
+		  		err = db.MoveFile(nameFrom, name, user, date)
 
-			if err != nil {
-				return err
-			}
-		}
+		  		if err != nil {
+		  			return err
+		  		}
+		  	}
+
+		  	if (fileStat.Addition != 0 || fileStat.Deletion != 0) {
+		  		err = db.UpdateFile(name, false, fileStat.Addition, fileStat.Deletion, user, date)
+		  	}
+
+		  case merkletrie.Delete:
+		  	name = change.From.Name
+		  	err = db.DeleteFile(name, user, date)
+		  }
+
+		  if err != nil {
+		  	return err
+		  }
 	}
 
 	return nil
@@ -131,8 +138,6 @@ func ProcessRepository(repo *git.Repository) error {
 	})
 
 	db.StartTransaction()
-
-	fmt.Printf("Processing %d/%d\r", 0, len(commits))
 
 	for i := len(commits) - 1 ; i >= 0; i-- {
 		fmt.Printf("Processing %d/%d\r", len(commits) - i, len(commits))
