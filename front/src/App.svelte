@@ -39,7 +39,7 @@
     </h1>
 
     <div class="chart">
-      <Treemap data={projectInfo} on:fileSelected={handleFileSelected}/>/>
+      <Treemap data={projectInfo} on:fileSelected={handleFileSelected}/>
     </div>
 
     <div class="analytics">
