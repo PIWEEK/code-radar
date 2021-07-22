@@ -243,8 +243,8 @@ func ProcessRepository(repo *git.Repository) error {
 		return nil
 	})
 
-	first := commits[0].Author.When
-	last := commits[len(commits) - 1].Author.When
+	first := commits[len(commits) - 1].Author.When
+	last := commits[0].Author.When
 
 	global.SetCommitRange(first, last)
 

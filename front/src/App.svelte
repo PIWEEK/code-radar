@@ -14,18 +14,43 @@
   let innerHeight = undefined;
   let innerWidth = undefined;
 
+  let userColors;
+  let firstCommit;
+  let lastCommit;
+ 
 	async function getProjectData() {
 		const res = await fetch(`http://localhost:8000/files`);
 		const json = await res.json();
 
     if (res.ok) {
+
+      userColors = calculateUserColors(json);
+      firstCommit = Date.parse(json["firstCommit"]);
+      lastCommit = Date.parse(json["lastCommit"]);
+      
 			return json;
 		} else {
 			throw new Error(json);
 		}
 	}
 
-  function handleFileSelected(file) {
+  function calculateUserColors(json) {
+    const users = json["users"]
+
+    const colors = [
+      "#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6",
+      "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99",
+      "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262",
+      "#5574a6", "#3b3eac"];
+
+    var userColors =
+      users.map((it, i) => [it, colors[i % colors.length] ])
+           .reduce((acc, [k, v]) => ({...acc, [k]: v}), {});
+
+    return userColors;
+  }
+
+ function handleFileSelected(file) {
     console.log("handleFileSelected", file.detail.file)
     selected = file.detail.file;
   }
@@ -48,8 +73,12 @@
 
     <div class="analytics">
       {#if selected}
-        <Detail file={selected}/>
+        <Detail file={selected}
+                userColors={userColors}
+                firstCommit={firstCommit}
+                lastCommit={lastCommit} />
       {/if}
+
     </div>
 
     {#if selected?.history}
@@ -93,7 +122,7 @@
 
 	.chart {
     float: left;
-		width: calc(80% + 2px);
+		width: calc(70% + 2px);
 		/* height: 400px; */
 		padding: 0;
 		margin: 0 -1px 36px -1px;
@@ -101,7 +130,7 @@
 	}
 
   .analytics {
-    width: calc(20% - 2px);
+    width: calc(30% - 2px);
 		height: 400px;
     float: right;
   }
