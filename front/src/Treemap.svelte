@@ -4,6 +4,9 @@
 	import { createEventDispatcher } from 'svelte';
 
   export let data;
+  export let height;
+  export let width;
+
   let el;
 
   const hierarchyData = {
@@ -15,9 +18,6 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-    const width = 954;
-    const height = 924;
-
     const format = d3.format(",d");
 
     const name = d => d.ancestors().reverse().map(d => d.data.name).join("/")
@@ -66,8 +66,6 @@
     flattenData(hierarchyData);
     hierarchyData.lines = d3.sum(hierarchyData.children, d => d.lines);
 
-    console.log("hierarchyData", hierarchyData)
-
     function tile(node, x0, y0, x1, y1) {
       d3.treemapResquarify(node, 0, 0, width, height);
       for (const child of node.children) {
@@ -88,11 +86,7 @@
     const y = d3.scaleLinear().rangeRound([0, height]);
 
     const svg = d3.select(el)
-        .attr("viewBox", [0.5, -30.5, width, height + 30])
-        .style("font", "8px sans-serif");
-
-
-    console.log(Object.keys(treemap(hierarchyData)))
+        .attr("viewBox", [0.5, -60.5, width, height + 60]);
 
     let group = svg.append("g")
         .call(render, treemap(hierarchyData));
@@ -106,9 +100,7 @@
       node.filter(d => d === root ? d.parent : d)
           .attr("cursor", "pointer")
           .on("click", (event, d) => {
-            console.log(d.data)
             if (d === root) {
-              console.log("zoomout", d)
               dispatch('fileSelected', {
                 file: d.parent.data
               });
@@ -141,7 +133,7 @@
           .attr("clip-path", d => d.clipUid)
           .attr("font-weight", d => d === root ? "bold" : null)
           .selectAll("tspan")
-          .data(d => (d === root ? name(d) : d.data.name).split(/(?=[A-Z][^A-Z])/g).concat(format(d.data.lines)))
+          .data(d => [(d === root ? name(d) : d.data.name)].concat(format(d.data.lines)))
           .join("tspan")
           .attr("x", 3)
           .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
@@ -154,10 +146,10 @@
 
     function position(group, root) {
       group.selectAll("g")
-          .attr("transform", d => d === root ? `translate(0,-30)` : `translate(${x(d.x0)},${y(d.y0)})`)
+          .attr("transform", d => d === root ? `translate(0,-60)` : `translate(${x(d.x0)},${y(d.y0)})`)
         .select("rect")
           .attr("width", d => d === root ? width : x(d.x1) - x(d.x0))
-          .attr("height", d => d === root ? 30 : y(d.y1) - y(d.y0));
+          .attr("height", d => d === root ? 60 : y(d.y1) - y(d.y0));
     }
 
     // When zooming in, draw the new nodes on top, and fade them in.

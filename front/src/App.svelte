@@ -9,8 +9,10 @@
 <script lang="ts">
   import Treemap from './Treemap.svelte';
   import Detail from './Detail.svelte';
- 
+
   let selected = undefined;
+  let innerHeight = undefined;
+  let innerWidth = undefined;
 
 	async function getProjectData() {
 		const res = await fetch(`http://localhost:8000/files`);
@@ -29,6 +31,8 @@
   }
 </script>
 
+<svelte:window bind:innerHeight={innerHeight} bind:innerWidth={innerWidth}/>
+
 <main>
   {#await getProjectData()}
     <p>...waiting</p>
@@ -39,24 +43,20 @@
     </h1>
 
     <div class="chart">
-      <Treemap data={projectInfo} on:fileSelected={handleFileSelected}/>
+      <Treemap data={projectInfo} width={innerWidth} height={innerHeight} on:fileSelected={handleFileSelected}/>
     </div>
 
     <div class="analytics">
       {#if selected}
         <Detail file={selected}/>
-
-
-
       {/if}
-
     </div>
 
     {#if selected?.history}
     <ul class="uk-list uk-list-striped">
       {#each selected.history as history, i}
         <li>
-          {history}
+          {history.Date} - {history.User}
         </li>
       {/each}
     </ul>
