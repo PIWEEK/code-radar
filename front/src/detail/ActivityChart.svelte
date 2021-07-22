@@ -6,14 +6,54 @@
  export let firstCommit;
  export let lastCommit;
 
- function createActivityChart(from, to, data) {
+ function parseDate(dStr) {
+   const t = Date.parse(dStr);
+   const d = new Date(t);
+   return new Date(d - d.getTime() % (3600 * 1000 * 24));
+ }
+ 
+ function processData(data) {
+   // We only want day precission
+   const result = {};
+   let maxValue = 0;
+
+   for (let entry of data) {
+     const date = parseDate(entry.date);
+     const t = date.getTime();
+     const curVal = entry.added + entry.deleted;
+     
+     if (!result[t]) {
+       result[t] = 0.0;
+     }
+     result[t] += curVal;
+
+     maxValue = Math.max(maxValue, result[t])
+   }
+
+   // console.log("??", result);
+   return [maxValue, Object.entries(result)]
+ }
+ 
+ function createActivityChart(from, to, history) {
+   let [maxValue, data] = processData(history);
+   
    // set the dimensions and margins of the graph
-   const margin = {top: 10, right: 30, bottom: 70, left: 40};
+   const margin = {
+     top: 10,
+     right: 30,
+     bottom: 70,
+     left: 40
+   };
+
    const width = 460 - margin.left - margin.right;
    const height = 250 - margin.top - margin.bottom;
-   const viewbox = [0, 0,
-                    width + margin.left + margin.right,
-                    height + margin.top + margin.bottom].join(" ")
+
+   const viewbox = [
+     0,
+     0,
+     width + margin.left + margin.right,
+     height + margin.top + margin.bottom
+   ].join(" ")
 
    // append the svg object to the body of the page
    const svg =
@@ -35,9 +75,7 @@
 
    svg.append("g")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(x)
-        //.tickFormat(d3.timeFormat("%Y-%m-%d"))
-      )
+      .call(d3.axisBottom(x))
       .selectAll("text")	
       .style("text-anchor", "end")
       .attr("dx", "-.8em")
@@ -45,7 +83,7 @@
       .attr("transform", "rotate(-65)")
    ;
 
-   const maxValue = data.reduce((acc,d) => Math.max(acc,d.Added + d.Deleted), -Infinity)
+   // const maxValue = data.reduce((acc,d) => Math.max(acc,d.Added + d.Deleted), -Infinity)
    const y = d3.scaleLinear()
                .domain([0, maxValue + 10])
                .range([height, 0]);
@@ -53,15 +91,16 @@
    svg.append("g")
       .call(d3.axisLeft(y));
 
-
    svg.selectAll("barchart")
-      .data(data)
-      .enter()
+      .data(data).enter()
       .append("rect")
-      .attr("x", function(d) { return x(Date.parse(d.Date)); })
-      .attr("y", function(d) { return y(d.Added + d.Deleted); })
+      .attr("x", function(d) { return x(d[0]); })
+      .attr("y", function(d) { return y(d[1]); })
       .attr("width", 2)
-      .attr("height", function(d) { return height - y(d.Added + d.Deleted); })
+      .attr("height", function(d) {
+        const value = height - y(d[1]);
+        return (value <= 0) ? 0 : value;
+      })
       .attr("fill", "#69b3a2")
  }
 

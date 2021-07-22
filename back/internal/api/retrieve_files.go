@@ -31,10 +31,10 @@ type RetrieveFilesResponseFile struct {
 }
 
 type RetrieveFilesResponseHistoryEntry struct {
-	User string `json:user`
-	Added int `json:added`
-	Deleted int `json:deleted`
-	Date string `json:date`
+	User string `json:"user"`
+	Added int `json:"added"`
+	Deleted int `json:"deleted"`
+	Date string `json:"date"`
 }
 
 func RetrieveFiles(w http.ResponseWriter, r *http.Request) {

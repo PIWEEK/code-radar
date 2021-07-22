@@ -32,7 +32,6 @@
 
     <h3>Commit history</h3>
     <ActivityChart file={file} firstCommit={firstCommit} lastCommit={lastCommit}/>
-
     <h3>File activity</h3>
     <ActivityList file={file}/>
   </div>

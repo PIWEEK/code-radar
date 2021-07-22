@@ -5,7 +5,14 @@
  export let file;
  export let userColors;
 
- function createOwnersChart(data, dataColor) {
+ function userColor(user) {
+   if (user === "other") {
+     return "#666";
+   }
+   return userColors[user];
+ }
+ 
+ function createOwnersChart(data) {
    const width = 100;
    const height = 100;
 
@@ -23,27 +30,50 @@
        .attr("transform", `translate(${width/2}, ${height/2})`);
 
    const pie = d3.pie().value((d) => d[1])
-   const pieData = pie(Object.entries(data))
+
+   
+   const pieData = pie(processData(data))
 
    svg.selectAll('piechart')
       .data(pieData)
       .join('path')
       .attr('d', d3.arc().innerRadius(0).outerRadius(radius))
-      .attr('fill', (d) => dataColor[d.data[0]])
+      .attr('fill', (d) => userColor(d.data[0]))
       .attr("stroke", "none");     
+ }
+
+ function processData(data) {
+   let others = 0.0;
+   let result = [];
+
+   // Puts together all the "minor" percents into one single category "other"
+   Object.entries(data)
+         .forEach(([user, percent]) => {
+           if (percent > .01) {
+             result.push([user, percent]);
+           } else {
+             others += percent;
+           }
+         });
+
+   if (others > .01) {
+     result.push(["other", others]);
+   }
+
+   return result;
  }
 
  function updateOwnersChart(data) {
    document.querySelectorAll(".owners-chart *").forEach((n)=>n.remove());
-   createOwnersChart(file.owners, userColors);
+   createOwnersChart(file.owners);
  }
 
  function sortedOwners(owners) {
-   const entries = Object.entries(owners)
+   const entries = processData(owners)
    return entries.map(([user, value]) => ({
      user: user,
      percent: Number(value * 100).toFixed(2),
-     color: userColors[user]
+     color: userColor(user)
    })).sort((a, b) => b.percent - a.percent);
  }
 
@@ -60,7 +90,7 @@
 <div class="owner-info">
   <ul class="user-list">
     {#each sortedOwners(file.owners) as owner}
-      <li class="user-list-entry">
+      <li class="user-list-entry" title="{owner.user} ({owner.percent}%)">
         <div class="user-list-color" style="background-color: {owner.color}"></div>
         <div class="user-list-data">
           <span class="user-list-name">{owner.user}</span> <span class="user-list-percent">({owner.percent}%)<span>
@@ -79,7 +109,7 @@
    font-size: 70%;
    list-style: none;
    padding: 0;
-   width: 50%;
+   min-width: 15.5rem;
    display: flex;
    flex-direction: column;
    justify-content: center;
