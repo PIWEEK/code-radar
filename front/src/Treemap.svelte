@@ -42,22 +42,21 @@
         .range([1,10]);
 
     data.files.forEach((f) => {
-      let path = f.directory  ? f.directory.split("/") : [];
-      if (f.isDirectory) {
-        path = path.concat([f.name]);
-      }
-
-
-      let d = hierarchyData;
       if (f.name === ".") {
         Object.keys(f).forEach(key => {
-          d[key] = f[key];
+          hierarchyData[key] = f[key];
         });
       }
       else {
+        let d = hierarchyData;
+        let path = f.directory ? f.directory.split("/") : [];
+
+        path = path.concat([f.name]);
+
         if (f.directory === ".") {
           path = [f.name];
         }
+
         path.forEach((p) => {
           if(!d.children) {
             d.children = {};

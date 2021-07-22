@@ -9,7 +9,7 @@
 
  function createOwnersChart(data, dataColor) {
    const width = 100;
-   const height = 50;
+   const height = 100;
 
    const radius = Math.min(width, height) / 2;
 
@@ -105,6 +105,14 @@
    createActivityChart(firstCommit, lastCommit, file.history);
  }
 
+ function sortedOwners(owners) {
+   return Object.entries(owners)
+                .map(([user, value]) =>
+                  ({user: user,
+                   percent: Number(value * 100).toFixed(2),
+                   color: userColors[user]}))
+                .sort((a, b) => b.percent - a.percent);
+ }
 
  onMount(async () => {
    createOwnersChart(file.owners, userColors);
@@ -119,11 +127,28 @@
 </script>
 
 <div class="detail">
-  <div>Name: {file.name}</div>
-  <div>Lines: {file.lines}</div>
-  <div>Rating: {file.rating}</div>
+  {#if file.name != "."}
+    {#if file.directory && file.directory !== "."}
+      <div>{file.directory}/{file.name}</div>
+    {:else}
+      <div>{file.name}</div>
+    {/if}
+  {/if}
+  <div>{file.lines} lines. Rating: {file.rating}</div>
 
-  <div class="owners-chart">
+  <div class="owner-info">
+    <ul class="user-list">
+      {#each sortedOwners(file.owners) as owner}
+        <li class="user-list-entry">
+          <div class="user-list-color" style="background-color: {owner.color}"></div>
+          <div class="user-list-data">
+            <span class="user-list-name">{owner.user}</span> <span class="user-list-percent">({owner.percent}%)<span>
+          </div>
+        </li>
+      {/each}
+    </ul>
+    <div class="owners-chart">
+    </div>
   </div>
 
   <div class="activity-chart">
@@ -135,9 +160,17 @@
    border: 1px solid black;
    margin: 0.5rem;
    padding: 0.5rem;
+   background: white;
  }
+
+ .owner-info {
+   display: flex;
+   align-items: center;
+ }
+
  .owners-chart {
-   
+   width: 100%;
+   height: 100%;
  }
 
  .activity-chart {
@@ -158,6 +191,33 @@
    position: absolute;
    top: 10px;
    left: 0;
+ }
+
+ .user-list {
+   font-size: 70%;
+   list-style: none;
+   padding: 0;
+   width: 50%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   padding: 8px;
+ }
+
+ .user-list-entry {
+   display: flex;
+   align-items: center;
+ }
+
+ .user-list-data {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+ .user-list-color {
+   width: 8px;
+   height: 8px;
+   margin-right: 8px
  }
  
 </style>
