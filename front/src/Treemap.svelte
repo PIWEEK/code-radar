@@ -131,27 +131,25 @@
             }
           });
 
-      node.on('mouseover', function() {
-        tooltip.style('visibility', 'visible');
-      })
-      .on('mousemove', function(d) {
-        console.log("move", d)
-        tooltip
-          .style('top', d3.event.pageY - 10 + 'px')
-          .style('left', d3.event.pageX + 10 + 'px')
-          .text(`${d}`);
-      })
-      .on('mouseout', function() {
-        tooltip.style('visibility', 'hidden');
-      });
-
       node.append("title")
           .text(d => `${name(d)}\n${format(d.data.lines)}`);
 
       node.append("rect")
           // .attr("id", d => d.leafUid = uuidv4())
           .attr("fill", d => d === root ? "#fff" : color(d.data.rating))
-          .attr("stroke", "#fff");
+          .attr("stroke", "#fff")
+          .on('mouseover', function() {
+            tooltip.style('visibility', 'visible');
+          })
+          .on('mousemove', function(event, d) {
+            tooltip
+              .style('top', event.pageY - 10 + 'px')
+              .style('left', event.pageX + 10 + 'px')
+              .text(`Rating: ${d.data.rating}`);
+          })
+          .on('mouseout', function() {
+            tooltip.style('visibility', 'hidden');
+          });;
 
       node.append("clipPath")
         // .attr("id", d => d.clipUid = uuidv4())
