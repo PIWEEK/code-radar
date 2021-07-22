@@ -49,12 +49,7 @@ func RetrieveFiles(w http.ResponseWriter, r *http.Request) {
 
 	for _, file := range files {
 		isDir := file.Dir
-
-		var directory string
-
-		if file.Parent != "." {
-			directory = file.Parent
-		}
+		directory := file.Parent
 
 		var extension string
 		if !isDir {
