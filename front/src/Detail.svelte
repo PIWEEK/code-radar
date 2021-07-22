@@ -2,6 +2,7 @@
  import { onMount, afterUpdate } from 'svelte';
  import * as d3 from 'd3';
 
+ export let project;
  export let file;
  export let userColors;
  export let firstCommit;
@@ -129,10 +130,12 @@
 <div class="detail">
   {#if file.name != "."}
     {#if file.directory && file.directory !== "."}
-      <div>{file.directory}/{file.name}</div>
+      <div><a href={project.url}>{project.name}</a> / {file.directory}/{file.name}</div>
     {:else}
-      <div>{file.name}</div>
+      <div><a href={project.url}>{project.name}</a> / {file.name}</div>
     {/if}
+  {:else}
+    <div><a href={project.url}>{project.name}</a></div>
   {/if}
   <div>{file.lines} lines. Rating: {file.rating}</div>
 
@@ -153,6 +156,17 @@
 
   <div class="activity-chart">
   </div>
+
+  {#if file.history}
+    <ul class="file-history uk-list uk-list-striped">
+      {#each file.history as history, i}
+        <li>
+          [{history.Date}] {history.User} +{history.Added} -{history.Deleted}
+        </li>
+      {/each}
+    </ul>
+  {/if}
+
 </div>
 
 <style>
@@ -161,6 +175,8 @@
    margin: 0.5rem;
    padding: 0.5rem;
    background: white;
+   height: 90vh;
+   overflow: auto;
  }
 
  .owner-info {
@@ -218,6 +234,10 @@
    width: 8px;
    height: 8px;
    margin-right: 8px
+ }
+
+ .file-history {
+   font-size: 0.8rem;
  }
  
 </style>

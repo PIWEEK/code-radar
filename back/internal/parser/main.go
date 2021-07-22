@@ -84,8 +84,10 @@ func ProcessCommit(commit *object.Commit, previous *object.Commit) error {
 		fileStat := statsMap[name]
 
 		switch action {
-		  case merkletrie.Insert:
-		  	err = db.UpdateFile(name, false, fileStat.Addition, 0, user, date)
+  		case merkletrie.Insert:
+  			if fileStat.Addition != 0 {
+  		  	err = db.UpdateFile(name, false, fileStat.Addition, 0, user, date)
+  			}
 
 		  case merkletrie.Modify:
 		  	nameFrom := change.From.Name

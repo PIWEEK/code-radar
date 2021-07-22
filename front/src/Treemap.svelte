@@ -31,7 +31,11 @@
 
     const format = d3.format(",d");
 
-    const name = d => d.ancestors().reverse().map(d => d.data.name).join("/")
+    const name = (d) => {
+      let ret = d.ancestors().reverse().map(d => d.data.name).join("/");
+      ret = ret.replace(".", data.name);
+      return ret;
+    }
     const color = d3.scaleLinear()
       .domain([0, 1])
       .range(["#e1eec3", "#f05053"]);

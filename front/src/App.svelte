@@ -65,10 +65,6 @@
   {#await getProjectData()}
     <p>...waiting</p>
   {:then projectInfo}
-    <h1 class="uk-heading-medium uk-heading-divider">
-    <a href="{projectInfo.url}" target="_blank">{projectInfo.name}
-    </a>
-    </h1>
 
     <div class="chart">
       <Treemap data={projectInfo} width={innerWidth} height={innerHeight} on:fileSelected={handleFileSelected}/>
@@ -76,9 +72,10 @@
 
     <div class="analytics">
       {#if selected}
-        <Detail file={selected}
+        <Detail project={projectInfo}
+                        file={selected}
                 userColors={userColors}
-                firstCommit={firstCommit}
+                        firstCommit={firstCommit}
                 lastCommit={lastCommit} />
       {/if}
 
@@ -114,8 +111,9 @@
 	}
 
 	.chart {
-    float: left;
+    float: right;
 		width: calc(70% + 2px);
+
 		padding: 0;
 		margin: 0 -1px 36px -1px;
 		overflow: hidden;
@@ -124,6 +122,10 @@
   .analytics {
     width: calc(30% - 2px);
 		height: 400px;
-    float: right;
+    float: left;
+
+
+
+
   }
 </style>
