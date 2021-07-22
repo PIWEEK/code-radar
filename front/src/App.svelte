@@ -65,20 +65,18 @@
   {#await getProjectData()}
     <p>...waiting</p>
   {:then projectInfo}
+    <div class="detail">
+      {#if selected}
+        <Detail project={projectInfo}
+                file={selected}
+                userColors={userColors}
+                firstCommit={firstCommit}
+                lastCommit={lastCommit} />
+      {/if}
+    </div>
 
     <div class="chart">
       <Treemap data={projectInfo} width={innerWidth} height={innerHeight} on:fileSelected={handleFileSelected}/>
-    </div>
-
-    <div class="analytics">
-      {#if selected}
-        <Detail project={projectInfo}
-                        file={selected}
-                userColors={userColors}
-                        firstCommit={firstCommit}
-                lastCommit={lastCommit} />
-      {/if}
-
     </div>
 
   {:catch error}
@@ -88,44 +86,36 @@
 </main>
 
 <style>
-	main {
-		text-align: left;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
+ main {
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+   height: 100%;
+ }
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+ @media (min-width: 640px) {
+	 main {
+		 max-width: none;
+	 }
+ }
 
-	.chart :global(div) {
-		font: 10px sans-serif;
-		background-color: steelblue;
-		text-align: right;
-		padding: 3px;
-		margin: 1px;
-		color: white;
-	}
+ .chart :global(div) {
+	 font: 10px sans-serif;
+	 background-color: steelblue;
+	 text-align: right;
+	 padding: 3px;
+	 margin: 1px;
+	 color: white;
+ }
 
-	.chart {
-    float: right;
-		width: calc(70% + 2px);
+ .detail {
+   width: 34rem;
+   box-shadow: 1px 0px 6px 2px #00000030;
+ }
 
-		padding: 0;
-		margin: 0 -1px 36px -1px;
-		overflow: hidden;
-	}
+ .chart {
+   flex: 1;
+   padding: 1rem 2rem;
+ }
 
-  .analytics {
-    width: calc(30% - 2px);
-		height: 400px;
-    float: left;
-
-
-
-
-  }
 </style>

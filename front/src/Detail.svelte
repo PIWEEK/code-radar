@@ -128,55 +128,91 @@
 </script>
 
 <div class="detail">
-  {#if file.name != "."}
-    {#if file.directory && file.directory !== "."}
-      <div><a href={project.url}>{project.name}</a> / {file.directory}/{file.name}</div>
+  <div class="header">
+    {#if file.name != "."}
+      {#if file.directory && file.directory !== "."}
+        <div><a href={project.url}>{project.name}</a> / {file.directory}/{file.name}</div>
+      {:else}
+        <div><a href={project.url}>{project.name}</a> / {file.name}</div>
+      {/if}
     {:else}
-      <div><a href={project.url}>{project.name}</a> / {file.name}</div>
+      <div><a href={project.url}>{project.name}</a></div>
     {/if}
-  {:else}
-    <div><a href={project.url}>{project.name}</a></div>
-  {/if}
-  <div>{file.lines} lines. Rating: {file.rating}</div>
+    <div class="header-detail">{file.lines} lines. Rating: {file.rating}</div>
+  </div>
 
-  <div class="owner-info">
-    <ul class="user-list">
-      {#each sortedOwners(file.owners) as owner}
-        <li class="user-list-entry">
-          <div class="user-list-color" style="background-color: {owner.color}"></div>
-          <div class="user-list-data">
-            <span class="user-list-name">{owner.user}</span> <span class="user-list-percent">({owner.percent}%)<span>
-          </div>
-        </li>
-      {/each}
-    </ul>
-    <div class="owners-chart">
+  <div class="content">
+    <h3>File owners</h3>
+    <div class="owner-info">
+      <ul class="user-list">
+        {#each sortedOwners(file.owners) as owner}
+          <li class="user-list-entry">
+            <div class="user-list-color" style="background-color: {owner.color}"></div>
+            <div class="user-list-data">
+              <span class="user-list-name">{owner.user}</span> <span class="user-list-percent">({owner.percent}%)<span>
+            </div>
+          </li>
+        {/each}
+      </ul>
+      <div class="owners-chart">
+      </div>
     </div>
+
+    <h3>Commit history</h3>
+    <div class="activity-chart">
+    </div>
+
+    {#if file.history}
+      <h3>File activity</h3>
+      <ul class="file-history uk-list uk-list-striped">
+        {#each file.history as history, i}
+          <li>
+            [{history.Date}] {history.User} +{history.Added} -{history.Deleted}
+          </li>
+        {/each}
+      </ul>
+    {/if}
   </div>
-
-  <div class="activity-chart">
-  </div>
-
-  {#if file.history}
-    <ul class="file-history uk-list uk-list-striped">
-      {#each file.history as history, i}
-        <li>
-          [{history.Date}] {history.User} +{history.Added} -{history.Deleted}
-        </li>
-      {/each}
-    </ul>
-  {/if}
-
 </div>
 
 <style>
  .detail {
-   border: 1px solid black;
-   margin: 0.5rem;
-   padding: 0.5rem;
-   background: white;
-   height: 90vh;
-   overflow: auto;
+   display: flex;
+   flex-direction: column;
+   height: 100%;
+   margin: 0rem;
+   overflow: hidden;
+   padding: 0;
+ }
+
+ h3 {
+   color: #1e87f0;
+   margin: 0;
+   border-bottom: 1px solid #1e87f0;
+   margin-bottom: 1.5rem;
+   font-size: 1rem;
+   font-variant: all-petite-caps;
+   font-weight: 600;
+ }
+
+ .header {
+   padding: 1rem;
+ }
+
+ .content {
+   flex: 1;
+   padding: 1rem;
+   overflow-y: scroll;
+ }
+ 
+ .header a {
+   font-size: 1.5rem;
+   font-weight: 600;
+ }
+
+ .header-detail {
+   font-size: 0.8rem;
+   font-weight: 300;
  }
 
  .owner-info {
@@ -187,6 +223,7 @@
  .owners-chart {
    width: 100%;
    height: 100%;
+
  }
 
  .activity-chart {
