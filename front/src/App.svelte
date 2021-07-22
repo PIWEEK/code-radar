@@ -19,7 +19,7 @@
   let lastCommit;
 
 	async function getProjectData() {
-		const res = await fetch(`http://localhost:8000/files`);
+		const res = await fetch(`/files`);
 		const json = await res.json();
 
     if (res.ok) {

@@ -2,13 +2,15 @@ package api
 
 import (
 	"log"
+	"strconv"
 	"net/http"
 	"github.com/rs/cors"
 )
 
-func Start() error {
+func Start(port int) error {
 	routes := CreateRoutes()
 	handler := cors.Default().Handler(routes)
-	log.Println("Listening http://localhost:8000/files")
-	return http.ListenAndServe(":8000", handler)
+	strPort := strconv.Itoa(port)
+	log.Println("Listening on: http://localhost:" + strPort)
+	return http.ListenAndServe(":" + strPort, handler)
 }
