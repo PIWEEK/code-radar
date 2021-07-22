@@ -8,7 +8,7 @@
 
 <script lang="ts">
   import Treemap from './Treemap.svelte';
-  import Detail from './Detail.svelte';
+  import Detail from './detail/Detail.svelte';
 
   let selected = undefined;
   let innerHeight = undefined;
