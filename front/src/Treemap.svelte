@@ -11,20 +11,31 @@
 
   const hierarchyData = {
     name: ".",
-    lines: 33,
     children: {}
   };
 
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
+    const tooltip = d3
+      .select('body')
+      .append('div')
+      .style('position', 'absolute')
+      .style('z-index', '10')
+      .style('visibility', 'hidden')
+      .style('background-color', 'white')
+      .style('border', 'solid')
+      .style('border-width', '2px')
+      .style('border-radius', '5px')
+      .style('padding', '5px')
+      .text(`kk`);
+
     const format = d3.format(",d");
 
     const name = d => d.ancestors().reverse().map(d => d.data.name).join("/")
     const color = d3.scaleLinear()
       .domain([0, 1])
       .range(["#e1eec3", "#f05053"]);
-
 
     const dataScale = d3.scaleLinear()
         .domain([d3.min(data.files, function(d){return d.lines}), d3.max(data.files, function(d){return d.lines})])
@@ -33,36 +44,40 @@
     data.files.forEach((f) => {
       let path = f.directory  ? f.directory.split("/") : [];
       if (f.isDirectory) {
-        path = path.concat([f.name])
+        path = path.concat([f.name]);
       }
+
 
       let d = hierarchyData;
-      path.forEach((p) => {
-        if(!d.children) {
-          d.children = {};
-        }
-        if (!d.children[p]) {
-          d.children[p] = {};
-        }
-        d = d.children[p];
-        if(!d.children) {
-          d.children = {};
-        }
-      });
-
-      if (!f.isDirectory) {
-        d.children[f.name] = {
-          value: f.lines,
-          ...f
-        };
-      }
-      else {
+      if (f.name === ".") {
         Object.keys(f).forEach(key => {
           d[key] = f[key];
-        })
+        });
+      }
+      else {
+        if (f.directory === ".") {
+          path = [f.name];
+        }
+        path.forEach((p) => {
+          if(!d.children) {
+            d.children = {};
+          }
+          if (!d.children[p]) {
+            d.children[p] = {};
+          }
+          d = d.children[p];
+          if(!d.children) {
+            d.children = {};
+          }
+        });
+
+        Object.keys(f).forEach(key => {
+          d[key] = f[key];
+        });
       }
     });
 
+    console.log("hierarchyData", hierarchyData)
     flattenData(hierarchyData);
     hierarchyData.lines = d3.sum(hierarchyData.children, d => d.lines);
 
@@ -110,11 +125,25 @@
               dispatch('fileSelected', {
                 file: d.data
               });
-              if (d.data.isDirectory) {
+              if (d.data.children && d.data.children.length > 0) {
                 zoomin(d);
               }
             }
           });
+
+      node.on('mouseover', function() {
+        tooltip.style('visibility', 'visible');
+      })
+      .on('mousemove', function(d) {
+        console.log("move", d)
+        tooltip
+          .style('top', d3.event.pageY - 10 + 'px')
+          .style('left', d3.event.pageX + 10 + 'px')
+          .text(`${d}`);
+      })
+      .on('mouseout', function() {
+        tooltip.style('visibility', 'hidden');
+      });
 
       node.append("title")
           .text(d => `${name(d)}\n${format(d.data.lines)}`);
@@ -215,4 +244,9 @@
 <svg bind:this={el} class="chart"></svg>
 
 <style>
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    /* border-bottom: 1px dotted black; */
+  }
 </style>
