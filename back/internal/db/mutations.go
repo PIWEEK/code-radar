@@ -15,11 +15,10 @@ func UpdateFile(path string, dir bool, linesAdd int, linesDelete int, user strin
 		return err
 	}
 
-	parent := filepath.Dir(path)
+	var parent string
 
-	if parent == "." {
-		parent = ""
-	} else {
+	if path != "." {
+		parent = filepath.Dir(path)
 		err = UpdateFile(parent, true, linesAdd, linesDelete, user, date)
 
 		if err != nil {
