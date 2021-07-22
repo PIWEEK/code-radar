@@ -71,7 +71,7 @@
           }
         });
 
-        if(!f.isDirectory) {
+        if(f.directory !== "." && !f.isDirectory) {
           d.children[f.name] = f
         }
 
@@ -114,10 +114,14 @@
         .call(render, treemap(hierarchyData));
 
     function render(group, root) {
+
+      let id = 0;
+      let selectedNode = undefined;
+
       const node = group
         .selectAll("g")
         .data(root.children.concat(root))
-        .join("g");
+        .join("g")
 
       node.filter(d => d === root ? d.parent : d)
           .attr("cursor", "pointer")
@@ -135,26 +139,40 @@
               if (d.data.children && d.data.children.length > 0) {
                 zoomin(d);
               }
+              else {
+                if (selectedNode) {
+                  d3.select(selectedNode).style('fill',color(d.data.rating));
+                }
+                selectedNode = '#node-' + d.data.id;
+                d3.select(selectedNode).style('fill','pink');
+                d3.select(selectedNode).style('padding','10px');
+              }
             }
           });
 
-      node.append("title")
-          .text(d => `${name(d)}\n${format(d.data.lines)}`);
+      node
+        .attr("class", "node")
+        .append("title")
+        .text(d => `${name(d)}\n${format(d.data.lines)}`);
 
       node.append("rect")
-          // .attr("id", d => d.leafUid = uuidv4())
+          .attr("id", d => {
+            id = id + 1;
+            d.data.id = id;
+            return "node-" + id
+          })
           .attr("fill", d => d === root ? "#fff" : color(d.data.rating))
           .attr("stroke", "#fff")
-          .on('mouseover', function() {
+          .on('mouseover', (event, d) => {
             tooltip.style('visibility', 'visible');
           })
-          .on('mousemove', function(event, d) {
+          .on('mousemove', (event, d) => {
             tooltip
               .style('top', event.pageY - 10 + 'px')
               .style('left', event.pageX + 10 + 'px')
               .text(`Rating: ${d.data.rating}`);
           })
-          .on('mouseout', function() {
+          .on('mouseout', (event, d) =>{
             tooltip.style('visibility', 'hidden');
           });;
 
