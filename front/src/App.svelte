@@ -17,7 +17,7 @@
   let userColors;
   let firstCommit;
   let lastCommit;
- 
+
 	async function getProjectData() {
 		const res = await fetch(`http://localhost:8000/files`);
 		const json = await res.json();
@@ -27,7 +27,7 @@
       userColors = calculateUserColors(json);
       firstCommit = Date.parse(json["firstCommit"]);
       lastCommit = Date.parse(json["lastCommit"]);
-      
+
 			return json;
 		} else {
 			throw new Error(json);
@@ -51,7 +51,6 @@
   }
 
  function handleFileSelected(file) {
-    console.log("handleFileSelected", file.detail.file)
     selected = file.detail.file;
   }
 </script>

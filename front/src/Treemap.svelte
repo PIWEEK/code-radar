@@ -71,6 +71,10 @@
           }
         });
 
+        if(!f.isDirectory) {
+          d.children[f.name] = f
+        }
+
         Object.keys(f).forEach(key => {
           d[key] = f[key];
         });
@@ -79,6 +83,9 @@
 
     console.log("hierarchyData", hierarchyData)
     flattenData(hierarchyData);
+    dispatch('fileSelected', {
+      file: hierarchyData
+    });
     hierarchyData.lines = d3.sum(hierarchyData.children, d => d.lines);
 
     function tile(node, x0, y0, x1, y1) {
