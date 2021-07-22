@@ -84,16 +84,6 @@
 
     </div>
 
-    {#if selected?.history}
-    <ul class="uk-list uk-list-striped">
-      {#each selected.history as history, i}
-        <li>
-          {history.Date} - {history.User}
-        </li>
-      {/each}
-    </ul>
-    {/if}
-
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
@@ -126,7 +116,6 @@
 	.chart {
     float: left;
 		width: calc(70% + 2px);
-		/* height: 400px; */
 		padding: 0;
 		margin: 0 -1px 36px -1px;
 		overflow: hidden;
@@ -136,62 +125,5 @@
     width: calc(30% - 2px);
 		height: 400px;
     float: right;
-  }
-
-/* 
-  .breadcrumbs {
-		width: 100%;
-		padding: 0.3rem 0.4rem;
-		background-color: transparent;
-		font-family: inherit;
-		font-size: inherit;
-		text-align: left;
-		border: none;
-		cursor: pointer;
-		outline: none;
-	}
-
-	.breadcrumbs:disabled {
-		cursor: default;
-	}
-
-
-	.node {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		background-color: white;
-		overflow: hidden;
-		pointer-events: all;
-	}
-
-	.node:not(.leaf) {
-		cursor: pointer;
-	}
-
-	.contents {
-		width: 100%;
-		height: 100%;
-		padding: 0.3rem 0.4rem;
-		border: 1px solid white;
-		background-color: hsl(240, 8%, 70%);
-		color: white;
-		border-radius: 4px;
-		box-sizing: border-box;
-	}
-
-	.node:not(.leaf) .contents {
-		background-color: hsl(240, 8%, 44%);
-	}
-
-	strong, span {
-		display: block;
-		font-size: 12px;
-		white-space: nowrap;
-		line-height: 1;
-	} */
-
-  .uk-list {
-    clear: both;
   }
 </style>

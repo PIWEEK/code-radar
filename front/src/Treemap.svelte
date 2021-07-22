@@ -27,8 +27,7 @@
       .style('border', 'solid')
       .style('border-width', '2px')
       .style('border-radius', '5px')
-      .style('padding', '5px')
-      .text(`kk`);
+      .style('padding', '5px');
 
     const format = d3.format(",d");
 
@@ -70,10 +69,6 @@
           }
         });
 
-        if(f.directory !== "." && !f.isDirectory) {
-          d.children[f.name] = f
-        }
-
         Object.keys(f).forEach(key => {
           d[key] = f[key];
         });
@@ -107,7 +102,8 @@
     const y = d3.scaleLinear().rangeRound([0, height]);
 
     const svg = d3.select(el)
-        .attr("viewBox", [0.5, -60.5, width, height + 60]);
+      .attr("viewBox", [0.5, -60.5, width, height + 60])
+      .style("font", "20px sans-serif");
 
     let group = svg.append("g")
         .call(render, treemap(hierarchyData));
@@ -184,7 +180,7 @@
           .attr("clip-path", d => d.clipUid)
           .attr("font-weight", d => d === root ? "bold" : null)
           .selectAll("tspan")
-          .data(d => [(d === root ? name(d) : d.data.name)].concat(format(d.data.lines)))
+          .data(d => [(d === root ? name(d) : (d.data.isDirectory ? '🗀 ': '') + d.data.name)].concat(format(d.data.lines)))
           .join("tspan")
           .attr("x", 3)
           .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
