@@ -1,13 +1,13 @@
 <h1 align="center">
   <br>
   <img width="30"
-       src="https://raw.githubusercontent.com/PIWEEK/code-radar/readme/front/public/favicon.svg" alt="LOGO">
+       src="https://raw.githubusercontent.com/PIWEEK/code-radar/main/front/public/favicon.svg" alt="LOGO">
   Code Radar
 </h1>
 
 **CodeRadar** is a GIT repository analyzer that retrieves information about file activity and file "ownership". 
 
-![Code radar screenshot](https://github.com/PIWEEK/code-radar/blob/readme/resources/screenshots/penpot.png)
+![Code radar screenshot](https://github.com/PIWEEK/code-radar/blob/main/resources/screenshots/penpot.png)
 
 ## Build and run
 
