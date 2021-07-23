@@ -9,6 +9,7 @@
 <script lang="ts">
   import Treemap from './Treemap.svelte';
   import Detail from './detail/Detail.svelte';
+  import config from "./config.json"
 
   let selected = undefined;
   let innerHeight = undefined;
@@ -19,7 +20,7 @@
   let lastCommit;
 
 	async function getProjectData() {
-		const res = await fetch(`http://localhost:8000/files`);
+		const res = await fetch(`${config.apiUrl}/files`);
 		const json = await res.json();
 
     if (res.ok) {
