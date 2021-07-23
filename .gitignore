@@ -1,3 +1,7 @@
 /back/tmp
 /tmp
 /back/main
+back/cmd/code-radar-embed/build
+back/cmd/code-radar-embed/*.svg
+back/cmd/code-radar-embed/*.html
+back/cmd/code-radar-embed/*.css

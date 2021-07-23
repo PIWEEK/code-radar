@@ -172,6 +172,27 @@ func ProcessFiles() error {
 	return nil
 }
 
+func ProcessFolder(dir *db.FileDB) error {
+	files, _ := db.ListFolderFiles(dir.Path)
+
+	var rating float32 = 0.0
+
+	// Keep the max rating of the children
+	for _, file := range files {
+		if file.Rating > rating {
+			rating = file.Rating
+		}
+	}
+
+	newDir := dir.Copy()
+	newDir.Rating = rating
+	newDir.Owners = CalculateOwners(dir)
+
+	err := db.SaveFile(newDir)
+
+	return err
+}
+
 func ProcessFolders() error {
 	dirs, _ := db.ListAllDirectories()
 
@@ -183,29 +204,19 @@ func ProcessFolders() error {
 	})
 
 	for _, dir := range dirs {
-		files, _ := db.ListFolderFiles(dir.Path)
-
-		var rating float32 = 0.0
-
-		// Keep the max rating of the children
-		for _, file := range files {
-			if file.Rating > rating {
-				rating = file.Rating
-			}
-		}
-
-		newDir := dir.Copy()
-		newDir.Rating = rating
-		newDir.Owners = CalculateOwners(dir)
-
-		err := db.SaveFile(newDir)
+		err := ProcessFolder(dir)
 
 		if err != nil {
 			return err
 		}
 	}
 
-	return nil
+	// We process again the root
+	dir, _ := db.GetFile(".")
+
+	err := ProcessFolder(dir)
+
+	return err
 }
 
 func ProcessRepository(repo *git.Repository) error {
