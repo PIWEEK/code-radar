@@ -16,23 +16,27 @@
 <div class="detail">
 
   <div class="header">
-    {#if file.name == "."}
-      <div><a href={project.url}>{project.name}</a></div>
-    {:else if !file.directory || file.directory === "."}
-      <div><a href={project.url}>{project.name}</a> / {file.name}</div>
-    {:else}
-      <div><a href={project.url}>{project.name}</a> / {file.directory} / {file.name}</div>
-    {/if}
-    <div class="header-detail">{file.lines} lines. Rating: {file.rating}</div>
+    <div class="header-title">
+      <img class="logo" src="/favicon.svg"/>
+      {#if file.name == "."}
+        <div><a href={project.url}>{project.name}</a></div>
+      {:else if !file.directory || file.directory === "."}
+        <div><a href={project.url}>{project.name}</a> / {file.name}</div>
+      {:else}
+        <div><a href={project.url}>{project.name}</a> / {file.directory} / {file.name}</div>
+      {/if}
+    </div>
+    <div class="header-detail">{file.lines} lines. {file.history.length} changes. Rating: {Number(file.rating * 100).toFixed(2)}%</div>
   </div>
 
   <div class="content">
-    <h3>File owners</h3>
+    <h3>Owners</h3>
     <OwnersChart file={file} userColors={userColors}/>
 
-    <h3>Commit history</h3>
+    <h3>Activity</h3>
     <ActivityChart file={file} firstCommit={firstCommit} lastCommit={lastCommit}/>
-    <h3>File activity</h3>
+
+    <h3>Changes</h3>
     <ActivityList file={file}/>
   </div>
 </div>
@@ -72,6 +76,16 @@
    font-weight: 600;
  }
 
+ .header-title {
+   display: flex;
+   align-items: center;
+ }
+
+ .header-title .logo {
+   width: 1.5rem;
+   margin-right: 0.5rem;
+ }
+ 
  .header-detail {
    font-size: 0.8rem;
    font-weight: 300;
