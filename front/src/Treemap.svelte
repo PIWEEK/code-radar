@@ -107,7 +107,7 @@
 
     const svg = d3.select(el)
       .attr("viewBox", [0.5, -60.5, width, height + 60])
-      .style("font", "20px sans-serif");
+      .style("font", "16px sans-serif");
 
     let group = svg.append("g")
         .call(render, treemap(hierarchyData));
@@ -169,7 +169,7 @@
             tooltip
               .style('top', event.pageY - 10 + 'px')
               .style('left', event.pageX + 10 + 'px')
-              .text(`Rating: ${d.data.rating}`);
+              .html(`Name: ${d.data.name}<br>Lines: ${d.data.lines}<br>Rating: ${d.data.rating}`);
           })
           .on('mouseout', (event, d) =>{
             tooltip.style('visibility', 'hidden');
@@ -186,8 +186,8 @@
           .selectAll("tspan")
           .data(d => [(d === root ? name(d) : (d.data.isDirectory ? '🗀 ': '') + d.data.name)].concat(format(d.data.lines)))
           .join("tspan")
-          .attr("x", 3)
-          .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
+          .attr("x", 10)
+          .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.3 + i * 0.9}em`)
           .attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
           .attr("font-weight", (d, i, nodes) => i === nodes.length - 1 ? "normal" : null)
           .text(d => d);

@@ -76,7 +76,7 @@
     </div>
 
     <div class="chart">
-      <Treemap data={projectInfo} width={innerWidth} height={innerHeight} on:fileSelected={handleFileSelected}/>
+      <Treemap data={projectInfo} width={innerWidth - 544} height={innerHeight - 40} on:fileSelected={handleFileSelected}/>
     </div>
 
   {:catch error}
@@ -97,15 +97,6 @@
 	 main {
 		 max-width: none;
 	 }
- }
-
- .chart :global(div) {
-	 font: 10px sans-serif;
-	 background-color: steelblue;
-	 text-align: right;
-	 padding: 3px;
-	 margin: 1px;
-	 color: white;
  }
 
  .detail {
